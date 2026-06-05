@@ -50,7 +50,7 @@
 - [x] Test manual: `curl -H "Authorization: Bearer <token>" localhost:8080/api/sessions` → JSON con sesiones
 - [x] Test manual: `curl -H "Authorization: Bearer <token>" localhost:8080/api/sessions/dev/windows/0/panes` → JSON con panes
 - [x] Test manual: `curl -X POST -H "Authorization: Bearer <token>" -d '{"name":"test-session"}' localhost:8080/api/sessions` → 201
-- [x] Test manual: `wscat -c "ws://localhost:8080/api/ws/pane/vb-bridge/0/0?token=<jwt>"` → stream de terminal con escape sequences ANSI
+- [x] Test manual: `wscat -c "ws://localhost:8080/api/ws/session/demo?token=<jwt>"` → stream de terminal con escape sequences ANSI
 
 ---
 

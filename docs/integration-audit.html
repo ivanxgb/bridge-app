@@ -35,7 +35,7 @@
 <p><strong>Problem:</strong> Clicking any session showed "No panes in this window" even though the API returns data correctly.</p>
 
 <h3>Investigation chain</h3>
-<pre><code>1. API test (curl): /api/sessions/vb-bridge/windows/0/panes → 200 OK with data <span class="ok">✅</span>
+<pre><code>1. API test (curl): /api/sessions/demo/windows/0/panes → 200 OK with data
 2. Backend logs: 401 on /api/sessions, 401 on /api/auth/refresh <span class="fail">❌</span>
 3. Frontend code: sessions_.$sessionId.tsx uses raw fetch() — no auth token <span class="fail">❌</span></code></pre>
 

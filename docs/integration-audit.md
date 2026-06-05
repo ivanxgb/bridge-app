@@ -9,7 +9,7 @@
 **Investigation chain:**
 
 ```
-1. API test (curl): /api/sessions/vb-bridge/windows/0/panes → 200 OK with data ✅
+1. API test (curl): `/api/sessions/demo/windows/0/panes` → 200 OK with data
 2. Backend logs: 401 on /api/sessions, 401 on /api/auth/refresh ❌
 3. Frontend code: sessions_.$sessionId.tsx uses raw fetch() — no auth token ❌
 ```

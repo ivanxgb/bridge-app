@@ -14,6 +14,12 @@ All notable changes to bridge-app will be documented here.
 
 ## Unreleased
 
+- Fix `/api/auth/refresh` so cookie-based sessions can refresh without a JSON
+  body, matching the frontend client behavior.
+- Add focused Go tests for auth refresh, WebSocket origin checks, and tmux output
+  parsing.
+- Refresh the maintainer brief docs and remove stale demo credentials/session
+  names from public docs.
 - Harden WebSocket origin checks with same-origin defaults and configurable
   `BRIDGE_ALLOWED_ORIGINS`.
 - Add GitHub Actions CI for backend and frontend builds.

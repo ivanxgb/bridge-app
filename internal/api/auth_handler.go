@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"encoding/json"
+	"io"
 	"net/http"
 	"time"
 
@@ -25,6 +26,30 @@ type loginRequest struct {
 type tokenResponse struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+}
+
+func setAccessCookie(w http.ResponseWriter, token string, ttl time.Duration) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "bridge_token",
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   int(ttl.Seconds()),
+	})
+}
+
+func setRefreshCookie(w http.ResponseWriter, token string, ttl time.Duration) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "bridge_refresh",
+		Value:    token,
+		Path:     "/api/auth/refresh",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   int(ttl.Seconds()),
+	})
 }
 
 func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
@@ -66,26 +91,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	accessToken, _ := auth.GenerateToken(user.ID, user.Username, h.JWTSecret, h.AccessTTL)
 	refreshToken, _ := auth.GenerateToken(user.ID, user.Username, h.JWTSecret, h.RefreshTTL)
 
-	// Set access token as HttpOnly secure cookie
-	http.SetCookie(w, &http.Cookie{
-		Name:     "bridge_token",
-		Value:    accessToken,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		MaxAge:   int(h.AccessTTL.Seconds()),
-	})
-	// Set refresh token cookie (longer lived)
-	http.SetCookie(w, &http.Cookie{
-		Name:     "bridge_refresh",
-		Value:    refreshToken,
-		Path:     "/api/auth/refresh",
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-		MaxAge:   int(h.RefreshTTL.Seconds()),
-	})
+	setAccessCookie(w, accessToken, h.AccessTTL)
+	setRefreshCookie(w, refreshToken, h.RefreshTTL)
 
 	// Also return user info in response body
 	w.Header().Set("Content-Type", "application/json")
@@ -115,20 +122,32 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		RefreshToken string `json:"refresh_token"`
+	refreshToken := ""
+	if cookie, err := r.Cookie("bridge_refresh"); err == nil {
+		refreshToken = cookie.Value
 	}
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid body", http.StatusBadRequest)
+	if refreshToken == "" {
+		var req struct {
+			RefreshToken string `json:"refresh_token"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil && err != io.EOF {
+			http.Error(w, "refresh token required", http.StatusUnauthorized)
+			return
+		}
+		refreshToken = req.RefreshToken
+	}
+	if refreshToken == "" {
+		http.Error(w, "refresh token required", http.StatusUnauthorized)
 		return
 	}
-	claims, err := auth.ParseToken(req.RefreshToken, h.JWTSecret)
+	claims, err := auth.ParseToken(refreshToken, h.JWTSecret)
 	if err != nil {
 		http.Error(w, "invalid refresh token", http.StatusUnauthorized)
 		return
 	}
 	accessToken, _ := auth.GenerateToken(claims.UserID, claims.Username, h.JWTSecret, h.AccessTTL)
-	json.NewEncoder(w).Encode(tokenResponse{AccessToken: accessToken, RefreshToken: req.RefreshToken})
+	setAccessCookie(w, accessToken, h.AccessTTL)
+	json.NewEncoder(w).Encode(tokenResponse{AccessToken: accessToken, RefreshToken: refreshToken})
 }
 
 func (h *AuthHandler) Me(w http.ResponseWriter, r *http.Request) {
