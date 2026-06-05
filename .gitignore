@@ -1,0 +1,33 @@
+# Go
+*.exe
+*.test
+*.out
+vendor/
+/tmp/
+/bin/
+
+# Node
+node_modules/
+web/dist/
+web/.vite/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+*.db
+
+# Build artifacts
+bridge-server
+
+# Local assistant/tool metadata
+.commandcode/
