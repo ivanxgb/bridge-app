@@ -1,0 +1,28 @@
+name: Security hardening
+description: Track a hardening task that is safe to discuss publicly.
+title: "security: "
+labels:
+  - security
+  - help wanted
+body:
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which auth, WebSocket, deployment, command, or session boundary is involved?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected improvement
+      description: What should be safer after this lands?
+    validations:
+      required: true
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Disclosure check
+      options:
+        - label: This is not an active vulnerability report with exploit details.
+          required: true

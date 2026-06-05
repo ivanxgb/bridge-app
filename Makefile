@@ -6,6 +6,8 @@ export PATH := $(PATH):/usr/local/go/bin:$(GOPATH)/bin
 BRIDGE_PORT ?= 8080
 JWT_SECRET ?= $(BRIDGE_JWT_SECRET)
 DB_PATH ?= bridge.db
+ALLOWED_ORIGINS ?= $(BRIDGE_ALLOWED_ORIGINS)
+DEV_ALLOWED_ORIGINS ?= http://localhost:5173,http://127.0.0.1:5173
 
 build: build-go build-web
 
@@ -23,7 +25,7 @@ dev:
 
 dev-go:
 	@echo "--- Backend ---"
-	BRIDGE_JWT_SECRET="$(JWT_SECRET)" go run ./cmd/bridge-server --port $(BRIDGE_PORT) --db $(DB_PATH) --jwt-secret "$(JWT_SECRET)"
+	BRIDGE_JWT_SECRET="$(JWT_SECRET)" BRIDGE_ALLOWED_ORIGINS="$(if $(ALLOWED_ORIGINS),$(ALLOWED_ORIGINS),$(DEV_ALLOWED_ORIGINS))" go run ./cmd/bridge-server --port $(BRIDGE_PORT) --db $(DB_PATH) --jwt-secret "$(JWT_SECRET)"
 
 dev-web:
 	@echo "--- Frontend ---"
@@ -31,7 +33,7 @@ dev-web:
 
 run: build
 	@echo "Running bridge-app on :$(BRIDGE_PORT)..."
-	BRIDGE_JWT_SECRET="$(JWT_SECRET)" ./bin/bridge-server --port $(BRIDGE_PORT) --db $(DB_PATH) --jwt-secret "$(JWT_SECRET)" --static-dir web/dist
+	BRIDGE_JWT_SECRET="$(JWT_SECRET)" BRIDGE_ALLOWED_ORIGINS="$(ALLOWED_ORIGINS)" ./bin/bridge-server --port $(BRIDGE_PORT) --db $(DB_PATH) --jwt-secret "$(JWT_SECRET)" --allowed-origins "$(ALLOWED_ORIGINS)" --static-dir web/dist
 
 clean:
 	rm -rf bin/ web/dist/

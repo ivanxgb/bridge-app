@@ -27,7 +27,7 @@ Thumbs.db
 *.db
 
 # Build artifacts
-bridge-server
+/bridge-server
 
 # Local assistant/tool metadata
 .commandcode/

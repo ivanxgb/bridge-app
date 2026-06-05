@@ -11,14 +11,9 @@ import (
 	"github.com/ivanxgb/bridge-app/internal/tmux"
 )
 
-var upgrader = websocket.Upgrader{
-	CheckOrigin:     func(r *http.Request) bool { return true },
-	ReadBufferSize:  4096,
-	WriteBufferSize: 4096,
-}
-
 type WSHandler struct {
-	JWTSecret []byte
+	JWTSecret      []byte
+	AllowedOrigins []string
 }
 
 func (h *WSHandler) ServeSessionWS(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +38,12 @@ func (h *WSHandler) ServeSessionWS(w http.ResponseWriter, r *http.Request) {
 
 	sessionName := chi.URLParam(r, "sessionID")
 	mode := r.URL.Query().Get("mode") // "bash" for test mode, empty for tmux
+
+	upgrader := websocket.Upgrader{
+		CheckOrigin:     websocketOriginChecker(h.AllowedOrigins),
+		ReadBufferSize:  4096,
+		WriteBufferSize: 4096,
+	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

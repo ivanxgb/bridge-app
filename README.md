@@ -1,5 +1,8 @@
 # bridge-app
 
+[![CI](https://github.com/ivanxgb/bridge-app/actions/workflows/ci.yml/badge.svg)](https://github.com/ivanxgb/bridge-app/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+
 Mobile-first web access for local `tmux` sessions.
 
 `bridge-app` is a self-hosted terminal bridge: a Go server talks to `tmux`,
@@ -9,6 +12,16 @@ tablets, and long-running developer sessions.
 It is built for people who keep work alive inside `tmux` and want to check,
 resume, or steer those sessions from another device without opening SSH in a
 mobile terminal.
+
+## Why Not Just SSH Into tmux?
+
+SSH plus `tmux` is still the foundation. bridge-app is for the awkward moments
+around it: checking a build from a phone, resuming an agent session from a
+tablet, sharing a private dashboard with a trusted device, or monitoring several
+long-running panes without fighting a mobile terminal emulator.
+
+The project keeps `tmux` as the source of truth and adds a browser layer for the
+workflows where a full SSH client is inconvenient.
 
 ## Highlights
 
@@ -114,9 +127,10 @@ Important values:
 | Value | Purpose |
 | --- | --- |
 | `BRIDGE_JWT_SECRET` / `--jwt-secret` | JWT signing secret. Required. Use a random value. |
-| `--db` | SQLite database path. Defaults to `bridge.db`. |
-| `--static-dir` | Optional built frontend directory. Leave blank for API-only mode. |
-| `--port` | HTTP port. Defaults to `8080`. |
+| `BRIDGE_ALLOWED_ORIGINS` / `--allowed-origins` | Optional comma-separated WebSocket origin allowlist. Defaults to same-origin. Use `http://localhost:5173` for Vite dev. |
+| `BRIDGE_DB` / `--db` | SQLite database path. Defaults to `bridge.db`. |
+| `BRIDGE_STATIC_DIR` / `--static-dir` | Optional built frontend directory. Leave blank for API-only mode. |
+| `BRIDGE_PORT` / `--port` | HTTP port. Defaults to `8080`. |
 
 ## Documentation
 
@@ -135,6 +149,7 @@ you would treat SSH:
 
 - run it only behind HTTPS
 - use a long random `BRIDGE_JWT_SECRET`
+- set `BRIDGE_ALLOWED_ORIGINS` when serving the UI and API from different origins
 - keep the database private
 - avoid exposing it to the public internet without rate limiting and monitoring
 - prefer a private network, VPN, or trusted reverse proxy for real deployments
@@ -154,6 +169,21 @@ cd web && npm run dev
 # full build
 make build
 ```
+
+## Contributing
+
+Issues and pull requests are welcome. Good first areas include docs, focused
+tests, mobile terminal ergonomics, deployment hardening, and security review.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) and [SECURITY.md](./SECURITY.md).
+
+## Project Health
+
+- Current release line: see [CHANGELOG.md](./CHANGELOG.md).
+- Planned hardening: rate limiting, audit logs, stronger admin controls, and
+  broader end-to-end coverage.
+- Public issue templates are available for bugs, features, and security
+  hardening tasks.
 
 ## License
 

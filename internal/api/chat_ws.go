@@ -16,13 +16,10 @@ import (
 	"github.com/ivanxgb/bridge-app/internal/model"
 )
 
-var chatUpgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool { return true },
-}
-
 type ChatWSHandler struct {
-	DB        *sql.DB
-	JWTSecret []byte
+	DB             *sql.DB
+	JWTSecret      []byte
+	AllowedOrigins []string
 }
 
 type chatWSMessage struct {
@@ -59,7 +56,10 @@ func (h *ChatWSHandler) ServeChatWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	conn, err := chatUpgrader.Upgrade(w, r, nil)
+	upgrader := websocket.Upgrader{
+		CheckOrigin: websocketOriginChecker(h.AllowedOrigins),
+	}
+	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Printf("[chat-ws] upgrade failed: %v", err)
 		return

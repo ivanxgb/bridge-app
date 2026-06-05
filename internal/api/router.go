@@ -10,7 +10,7 @@ import (
 	"github.com/ivanxgb/bridge-app/internal/auth"
 )
 
-func NewRouter(db *sql.DB, jwtSecret []byte) http.Handler {
+func NewRouter(db *sql.DB, jwtSecret []byte, allowedOrigins []string) http.Handler {
 	authH := &AuthHandler{
 		DB:         db,
 		JWTSecret:  jwtSecret,
@@ -18,9 +18,9 @@ func NewRouter(db *sql.DB, jwtSecret []byte) http.Handler {
 		RefreshTTL: 7 * 24 * time.Hour,
 	}
 	sessionH := &SessionHandler{}
-	wsH := &WSHandler{JWTSecret: jwtSecret}
+	wsH := &WSHandler{JWTSecret: jwtSecret, AllowedOrigins: allowedOrigins}
 	chatH := &ChatHandler{DB: db}
-	chatWSH := &ChatWSHandler{DB: db, JWTSecret: jwtSecret}
+	chatWSH := &ChatWSHandler{DB: db, JWTSecret: jwtSecret, AllowedOrigins: allowedOrigins}
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)

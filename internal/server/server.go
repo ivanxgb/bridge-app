@@ -15,10 +15,11 @@ import (
 )
 
 type Config struct {
-	Port      int
-	DBPath    string
-	JWTSecret string
-	StaticDir string
+	Port           int
+	DBPath         string
+	JWTSecret      string
+	StaticDir      string
+	AllowedOrigins []string
 }
 
 func Run(cfg Config) error {
@@ -32,7 +33,7 @@ func Run(cfg Config) error {
 		return fmt.Errorf("migrate db: %w", err)
 	}
 
-	apiHandler := api.NewRouter(database, []byte(cfg.JWTSecret))
+	apiHandler := api.NewRouter(database, []byte(cfg.JWTSecret), cfg.AllowedOrigins)
 
 	var handler http.Handler = apiHandler
 	if cfg.StaticDir != "" {

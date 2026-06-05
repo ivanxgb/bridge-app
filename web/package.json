@@ -3,16 +3,21 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "description": "React/xterm.js frontend for bridge-app, a self-hosted tmux web bridge.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "description": "",
   "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "tmux",
+    "terminal",
+    "xtermjs",
+    "self-hosted"
+  ],
+  "author": "Ivan Gonzalez",
+  "license": "MIT",
   "dependencies": {
     "@tanstack/react-query": "^5.100.14",
     "@tanstack/react-router": "^1.170.8",
