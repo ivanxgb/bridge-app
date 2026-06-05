@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/ivanxgb/bridge-app/actions/workflows/ci.yml/badge.svg)](https://github.com/ivanxgb/bridge-app/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![Project Page](https://img.shields.io/badge/project-page-58a6ff.svg)](https://ivanxgb.github.io/bridge-app/)
 
 Mobile-first web access for local `tmux` sessions.
 
@@ -134,13 +135,14 @@ Important values:
 
 ## Documentation
 
+- [Project page](https://ivanxgb.github.io/bridge-app/)
 - [Implementation plan](./docs/plan.md)
 - [Roadmap and status](./docs/roadmap.md)
 - [Vision](./docs/vision.md)
 - [Design system](./docs/design-system.md)
 - [Integration audit](./docs/integration-audit.md)
 
-The generated HTML versions in `docs/` can be published with GitHub Pages.
+The generated HTML versions in `docs/` are published with GitHub Pages.
 
 ## Security Notes
 
