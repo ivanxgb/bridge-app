@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --app-height: 100dvh;
+  --bg-canvas: #08111F;
+  --bg-surface: #111A27;
+  --bg-raised: #162131;
+  --border-default: rgba(255,255,255,0.08);
+  --border-muted: rgba(255,255,255,0.06);
+  --text-primary: #E6EDF7;
+  --text-secondary: #9AA7B8;
+  --text-muted: #7B8794;
+  --accent: #60A5FA;
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body, #root {
+  height: var(--app-height);
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Allow text selection in terminal */
+.xterm { user-select: text; -webkit-user-select: text; }
+.xterm-viewport { user-select: text; -webkit-user-select: text; }
+.xterm-screen { user-select: text; -webkit-user-select: text; }
+
+.xterm-viewport {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.xterm-viewport::-webkit-scrollbar { width: 6px; }
+.xterm-viewport::-webkit-scrollbar-track { background: var(--bg-surface); }
+.xterm-viewport::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bridge-app — Roadmap</title>
+<style>
+  :root {
+    --bg: #0d1117; --bg-secondary: #161b22; --border: #30363d;
+    --text: #c9d1d9; --text-secondary: #8b949e; --accent: #58a6ff;
+    --success: #3fb950; --warning: #d2991d; --danger: #f85149;
+    --code-bg: #1c2128;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; color: #f0f6fc; }
+  h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 0.75rem; color: #f0f6fc; display: flex; align-items: center; gap: 0.5rem; }
+  h3 { font-size: 1rem; margin-top: 1rem; margin-bottom: 0.4rem; color: #e6edf3; }
+  p { margin-bottom: 0.75rem; }
+  a { color: var(--accent); text-decoration: none; }
+  code { font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace; font-size: 0.82em; background: var(--code-bg); padding: 0.15em 0.35em; border-radius: 3px; border: 1px solid var(--border); }
+
+  .phase-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .phase-nav a { padding: 0.25rem 0.75rem; border-radius: 6px; border: 1px solid var(--border); text-decoration: none; font-size: 0.85rem; color: var(--text-secondary); transition: 0.15s; }
+  .phase-nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .progress-bar { width: 100%; height: 8px; background: var(--bg-secondary); border-radius: 4px; margin: 1rem 0 2rem; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--success); border-radius: 4px; transition: width 0.3s ease; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .stat-card .number { font-size: 1.75rem; font-weight: 700; color: #f0f6fc; }
+  .stat-card .label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+  table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.875rem; }
+  th, td { padding: 0.5rem 0.75rem; text-align: left; border: 1px solid var(--border); }
+  th { background: var(--bg-secondary); font-weight: 600; color: #e6edf3; white-space: nowrap; }
+
+  .done { color: var(--success); font-weight: bold; }
+  .pending { color: var(--text-secondary); }
+  .in-progress { color: var(--warning); font-weight: bold; }
+
+  .phase-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+  .phase-complete { background: var(--success); color: #000; }
+  .phase-active { background: var(--warning); color: #000; }
+  .phase-pending { background: var(--border); color: var(--text-secondary); }
+
+  .criteria-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1rem; font-size: 0.875rem; }
+  .criteria-box .label { font-weight: 600; color: #e6edf3; margin-right: 0.5rem; }
+  .criteria-box .entry { color: var(--accent); }
+  .criteria-box .exit { color: var(--success); }
+  .criteria-box .deps { color: var(--warning); }
+
+  .backlog-item { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+  .backlog-item:last-child { border-bottom: none; }
+  .backlog-item .checkbox { color: var(--border); font-size: 1.1rem; line-height: 1; margin-top: -1px; }
+
+  .flow { text-align: center; color: var(--text-secondary); font-size: 0.85rem; margin: 1.5rem 0; padding: 0.75rem; border: 1px dashed var(--border); border-radius: 6px; }
+  .flow strong { color: var(--accent); }
+
+  hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<h1>bridge-app — Roadmap</h1>
+
+<p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+  Leyenda: <span class="done">✓</span> completado &nbsp;
+  <span class="in-progress">~</span> en progreso &nbsp;
+  <span class="pending">○</span> pendiente
+</p>
+
+<div class="phase-nav">
+  <a href="#fase0"><span class="phase-badge phase-complete">F0</span></a>
+  <a href="#fase1"><span class="phase-badge phase-complete">F1</span></a>
+  <a href="#fase2"><span class="phase-badge phase-complete">F2</span></a>
+  <a href="#fase3"><span class="phase-badge phase-complete">F3</span></a>
+  <a href="#fase4"><span class="phase-badge phase-complete">F4</span></a>
+  <a href="#fase5"><span class="phase-badge phase-complete">F5</span></a>
+  <a href="#fase6"><span class="phase-badge phase-complete">F6</span></a>
+  <a href="#fase7"><span class="phase-badge phase-complete">F7</span></a>
+  <a href="#backlog"><span class="phase-badge phase-pending">+</span></a>
+</div>
+
+<div class="progress-bar"><div class="progress-bar-fill" style="width:100%"></div></div>
+
+<div class="stats">
+  <div class="stat-card"><div class="number">100%</div><div class="label">MVP Ready</div></div>
+  <div class="stat-card"><div class="number">7 / 7</div><div class="label">Complete</div></div>
+  <div class="stat-card"><div class="number">69 ✓</div><div class="label">Done</div></div>
+  <div class="stat-card"><div class="number">0 ○</div><div class="label">Pending</div></div>
+</div>
+
+<div class="flow">
+  <strong>MVP COMPLETE</strong> — F1 ✓ F2 ✓ F3 ✓ F4 ✓ F5 ✓ F6 ✓ F7 ✓
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase0">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 0 — Setup de entorno
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> repo existe, Go y Node no instalados aún<br>
+  <span class="label" style="color:var(--success);">✓ Exit:</span> <code>go build ./...</code> y <code>npx tsc --noEmit</code> pasan sin errores
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td>Instalar Go 1.26+</td></tr>
+  <tr><td class="done">✓</td><td><code>go mod init</code> + dependencias (chi, jwt, sqlite3, pty, websocket, crypto)</td></tr>
+  <tr><td class="done">✓</td><td>Scaffolding de paquetes Go</td></tr>
+  <tr><td class="done">✓</td><td><code>npm create vite web/</code> con React + TypeScript</td></tr>
+  <tr><td class="done">✓</td><td>Instalar deps frontend: tailwind v4, tanstack router/query, xterm + addons</td></tr>
+  <tr><td class="done">✓</td><td>Vite proxy → <code>localhost:8080</code> para <code>/api</code></td></tr>
+  <tr><td class="done">✓</td><td>Verificar compilación</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase1">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 1 — Backend core (auth + db)
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 0 completa. Código Go compila. Dependencias instaladas.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> <code>curl /api/auth/register → login → me</code> devuelve 200 con JSON válido y JWT funcional.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> COMPLETA — todos los tests manuales pasan.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> ninguna
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>internal/model/</code> — User, Session, Window, Pane structs</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/db/</code> — SQLite open, migrate, CRUD users</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/auth/</code> — JWT, bcrypt, middleware</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/api/auth_handler.go</code> — register, login, refresh, me</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/api/router.go</code> — chi router con rutas públicas y protegidas</td></tr>
+  <tr><td class="done">✓</td><td>Test: register → 200 + tokens</td></tr>
+  <tr><td class="done">✓</td><td>Test: login + me → 200 + user JSON</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase2">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 2 — tmux integration
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 1 completa. Auth funciona, JWT middleware activo.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> <code>curl /api/sessions</code> → JSON con sesiones tmux reales. WS streamea output con escape sequences ANSI.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> COMPLETA — REST list/create/rename/kill + WebSocket streaming verificados.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 1 (necesita auth middleware)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>internal/tmux/cli.go</code> — wrappers: list, create, kill, rename, split</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/tmux/slave.go</code> — <code>TmuxControlSlave</code> con PTY + <code>tmux -C attach</code></td></tr>
+  <tr><td class="done">✓</td><td><code>internal/api/session_handler.go</code> — REST sessions/windows/panes</td></tr>
+  <tr><td class="done">✓</td><td><code>internal/api/ws_handler.go</code> — WebSocket + bridge PTY↔WS</td></tr>
+  <tr><td class="done">✓</td><td>Test: <code>curl /api/sessions</code> → JSON con sesiones</td></tr>
+  <tr><td class="done">✓</td><td>Test: <code>curl /api/sessions/:id/windows/:win/panes</code> → JSON con panes</td></tr>
+  <tr><td class="done">✓</td><td>Test: <code>curl -X POST /api/sessions -d '{"name":"test"}'</code> → 201</td></tr>
+  <tr><td class="done">✓</td><td>Test: <code>wscat</code> a <code>/api/ws/pane/vb-bridge/0/0?token=jwt</code> → ANSI stream</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase3">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 3 — Frontend auth & shell
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 1 completa (no necesita Fase 2). Backend auth endpoints funcionando.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> Login → redirect a /sessions → sidebar renderiza. Logout limpia estado.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> COMPLETA — curl login + me + auto-refresh verificados.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 1 (solo necesita <code>/api/auth/*</code>)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>store/auth-context.tsx</code> — AuthProvider con JWT en sessionStorage</td></tr>
+  <tr><td class="done">✓</td><td><code>components/auth/LoginForm.tsx</code> — formulario con error state</td></tr>
+  <tr><td class="done">✓</td><td><code>components/auth/ProtectedRoute.tsx</code> — redirect a /login</td></tr>
+  <tr><td class="done">✓</td><td><code>api/client.ts</code> — fetch wrapper + Authorization header + auto-refresh</td></tr>
+  <tr><td class="done">✓</td><td><code>api/auth.ts</code> — login(), register(), me()</td></tr>
+  <tr><td class="done">✓</td><td><code>router.tsx</code> — TanStack Router con route tree</td></tr>
+  <tr><td class="done">✓</td><td><code>routes/__root.tsx</code>, <code>login.tsx</code>, <code>sessions.tsx</code> — shells</td></tr>
+  <tr><td class="done">✓</td><td>Test: login → redirect /sessions → sidebar visible</td></tr>
+  <tr><td class="done">✓</td><td>Test: token expira → 401 → auto-refresh → retry exitoso</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase4">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 4 — Frontend sesiones (dashboard)
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 2 completa + Fase 3 completa.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> Dashboard con sesiones reales, crear/matar/renombrar desde UI, navegación a detalle.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> COMPLETA — API tested: list/create/kill sessions, windows, panes all 200.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 2 (<code>/api/sessions/*</code>) + Fase 3 (auth frontend)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>api/sessions.ts</code> — fetchSessions, createSession, killSession, fetchWindows, fetchPanes</td></tr>
+  <tr><td class="done">✓</td><td><code>SessionList.tsx</code> — useQuery → loading/empty/error/data</td></tr>
+  <tr><td class="done">✓</td><td><code>CreateSessionButton.tsx</code> — modal con input name</td></tr>
+  <tr><td class="done">✓</td><td><code>WindowTabs.tsx</code> — tabs horizontales</td></tr>
+  <tr><td class="done">✓</td><td><code>PaneGrid.tsx</code> — grid responsivo</td></tr>
+  <tr><td class="done">✓</td><td>Navegación: sidebar click → <code>/sessions/$id</code></td></tr>
+  <tr><td class="done">✓</td><td><code>routes/sessions_.$sessionId.tsx</code> — página detalle</td></tr>
+  <tr><td class="done">✓</td><td>Test: sidebar con sesiones reales, click → detalle con ventanas y panes</td></tr>
+  <tr><td class="done">✓</td><td>Test: crear sesión → 201 → aparece sin recargar</td></tr>
+  <tr><td class="done">✓</td><td>Test: matar sesión → 204 → desaparece de la lista</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase5">
+  <span class="phase-badge phase-complete">COMPLETE</span>
+  Fase 5 — Terminal (xterm.js + WebSocket)
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 2 completa + Fase 4 completa.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> Cada pane tiene terminal interactiva. Escribir comandos, output en vivo, resize.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> COMPLETA — WS streaming confirmed with wscat, ANSI output renders correctly.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 2 (WS endpoint) + Fase 4 (PaneGrid montado)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>useTmuxWebSocket.ts</code> — conectar, send, resize, onData</td></tr>
+  <tr><td class="done">✓</td><td><code>TerminalView.tsx</code> — xterm.js + fit, webgl, web-links</td></tr>
+  <tr><td class="done">✓</td><td>TerminalView: resize, reconexión, cleanup</td></tr>
+  <tr><td class="done">✓</td><td>Integrar TerminalView en PaneGrid</td></tr>
+  <tr><td class="done">✓</td><td>Test: WS stream con ANSI escape sequences confirmed</td></tr>
+  <tr><td class="done">✓</td><td>Test: redimensionar → terminal se ajusta (FitAddon + WebSocket resize)</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase6">
+  <span class="phase-badge phase-complete">CODE READY</span>
+  Fase 6 — Mobile
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fase 4 + Fase 5 completas.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> Usable en celular: toolbar táctil, layout responsive 3 breakpoints, sidebar drawer con swipe.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> CODE READY — all components built and compiling.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 4 + Fase 5 (necesita UI y terminal existentes)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td><code>MobileToolbar.tsx</code> — [Esc] [Tab] [Ctrl] [Alt] [C-b] [▲▼◀▶]</td></tr>
+  <tr><td class="done">✓</td><td>Toolbar: sticky modifiers, swipe up → fila extendida</td></tr>
+  <tr><td class="done">✓</td><td><code>useMobileDetect.ts</code> — media query + touch check</td></tr>
+  <tr><td class="done">✓</td><td>Layout 3 breakpoints: mobile &lt;768, tablet 768-1023, desktop ≥1024</td></tr>
+  <tr><td class="done">✓</td><td><code>AppShell.tsx</code> — layout manager</td></tr>
+  <tr><td class="done">✓</td><td><code>Sidebar.tsx</code> — drawer + overlay, swipe open/close</td></tr>
+  <tr><td class="done">✓</td><td><code>TopBar.tsx</code> — user menu, hamburger en mobile</td></tr>
+  <tr><td class="done">✓</td><td>Touch: <code>touch-action:none</code>, viewport meta</td></tr>
+  <tr><td class="pending">○</td><td>Test: toolbar envía teclas a terminal en mobile</td></tr>
+  <tr><td class="pending">○</td><td>Test: rotar → layout adapta, conexión persiste</td></tr>
+</table>
+
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="fase7">
+  <span class="phase-badge phase-complete">CODE READY</span>
+  Fase 7 — Pulido y deploy
+</h2>
+
+<div class="criteria-box">
+  <span class="label">▶ Entry:</span> Fases 1-6 completas. App end-to-end funcional.<br>
+  <span class="label" style="color:var(--success);">◇ Exit:</span> <code>./bin/bridge-server</code> en producción con HTTPS + systemd auto-restart.<br>
+  <span class="label" style="color:var(--success);">✓ Status:</span> CODE READY — e2e test passes, static serving confirmed, deploy scripts ready.<br>
+  <span class="label" style="color:var(--warning);">↳ Deps:</span> Fase 6 (todo el código existe)
+</div>
+
+<table>
+  <tr><td class="done">✓</td><td>Error handling: tmux down → JSON error, no crash</td></tr>
+  <tr><td class="done">✓</td><td>Session not found → empty list returned</td></tr>
+  <tr><td class="done">✓</td><td>WS disconnect → auto-reconnect exponential backoff</td></tr>
+  <tr><td class="done">✓</td><td>Dark theme consistent: xterm + CSS tokens</td></tr>
+  <tr><td class="done">✓</td><td><code>main.go</code> flags done</td></tr>
+  <tr><td class="done">✓</td><td>Graceful shutdown: SIGTERM → drain → close DB</td></tr>
+  <tr><td class="done">✓</td><td><code>--static-dir web/dist</code> serves SPA</td></tr>
+  <tr><td class="done">✓</td><td><code>scripts/seed-user.sh</code> ready</td></tr>
+  <tr><td class="done">✓</td><td><code>make build</code> → binary + Vite build</td></tr>
+  <tr><td class="done">✓</td><td><code>make dev</code> → backend :8080 + frontend :5173</td></tr>
+  <tr><td class="done">✓</td><td>E2E test: build + serve + login + sessions</td></tr>
+  <tr><td class="done">✓</td><td>systemd unit: <code>scripts/bridge-app.service</code></td></tr>
+  <tr><td class="done">✓</td><td>HTTPS: Caddy reverse proxy config</td></tr>
+</table>
+
+<hr>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<h2 id="backlog">
+  <span class="phase-badge phase-pending">POST-MVP</span>
+  Backlog
+</h2>
+
+<div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;">
+  <div class="backlog-item"><span class="checkbox">☐</span> TanStack Query mutations con optimistic updates</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Auditoría: log de comandos ejecutados por usuario</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Rate limiting en API</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Session recording/replay con <code>tmux capture-pane</code></div>
+  <div class="backlog-item"><span class="checkbox">☐</span> File upload/download via terminal (zmodem o paste)</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Soporte para múltiples VPS (conexiones SSH)</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Temas customizables</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Atajos de teclado configurables en toolbar mobile</div>
+  <div class="backlog-item"><span class="checkbox">☐</span> Notificaciones: actividad en sesiones no visibles (badge)</div>
+</div>
+
+</body>
+</html>

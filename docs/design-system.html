@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge App — Design System</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-raised: #1c2128;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --text-subtle: #6e7681;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --success: #3fb950;
+    --warning: #d29922;
+    --danger: #f85149;
+    --code-bg: #1c2128;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    color: #f0f6fc;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: #f0f6fc;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #e6edf3;
+  }
+
+  h4 {
+    font-size: 0.95rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  p { margin-bottom: 0.75rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 0.85em;
+    background: var(--code-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  pre code {
+    border: none;
+    padding: 0;
+    background: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.875rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--surface);
+    font-weight: 600;
+    color: #e6edf3;
+  }
+
+  tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+  ul, ol {
+    margin: 0.5rem 0 1rem 1.5rem;
+  }
+
+  li { margin-bottom: 0.25rem; }
+
+  hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-accent { background: var(--accent); color: #000; }
+  .badge-success { background: var(--success); color: #000; }
+  .badge-warning { background: var(--warning); color: #000; }
+  .badge-danger { background: var(--danger); color: #fff; }
+
+  .color-swatch {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .color-row:last-child { border-bottom: none; }
+
+  .color-info {
+    flex: 1;
+  }
+
+  .color-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .color-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .component-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    white-space: pre;
+  }
+
+  .note {
+    background: rgba(88, 166, 255, 0.1);
+    border-left: 3px solid var(--accent);
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .warning {
+    background: rgba(210, 153, 34, 0.1);
+    border-left: 3px solid var(--warning);
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 1rem; }
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Bridge App — Visual Architecture & Design System</h1>
+
+<h2>Intent</h2>
+
+<p><strong>Human</strong>: Developer on mobile, managing VPS tmux sessions. Previously using Termius but frustrated with scroll handling and session management.</p>
+
+<p><strong>Must accomplish</strong>: Quickly access tmux sessions, view terminal output, send commands, manage windows/panes — all from a touch interface.</p>
+
+<p><strong>Feel</strong>: Professional terminal emulator with session management, not a dashboard showing terminals. Dense, functional, command-oriented. Like opening a native terminal app, not a web app.</p>
+
+<hr>
+
+<h2>Domain Exploration</h2>
+
+<h3>Product Domain</h3>
+<p>Terminal multiplexing, remote server administration, command-line workflows. The world of SSH, tmux/screen, REPL environments, infrastructure monitoring.</p>
+
+<h4>Concepts from this world</h4>
+<ul>
+  <li>Terminal emulator (xterm, alacritty, kitty aesthetics)</li>
+  <li>Multiplexer hierarchy: session → window → pane</li>
+  <li>ANSI color palette (not material design colors)</li>
+  <li>Status lines and powerline prompts</li>
+  <li>Monospace typography for code/output</li>
+  <li>Cursor styles (block, bar, underline)</li>
+  <li>Scrollback buffers</li>
+  <li>Key sequences (Ctrl+C, Ctrl+Z, tmux prefix)</li>
+</ul>
+
+<h3>Color World</h3>
+<p>Physical spaces where this product lives:</p>
+<ul>
+  <li>Server rooms: cool grays, indicator LEDs (green=active, amber=warning, red=error)</li>
+  <li>Terminal emulators: deep blacks (#0a0a0a), phosphor greens, cyan prompts</li>
+  <li>Code editors: syntax highlighting colors (blue keywords, orange strings, green comments)</li>
+  <li>Network diagrams: connection lines in muted blues/grays</li>
+  <li>Status dashboards: traffic lights (red/yellow/green) but desaturated for dark mode</li>
+</ul>
+
+<h4>Actual colors that exist in this domain</h4>
+<div class="color-row">
+  <div class="color-swatch" style="background: #0d1117;"></div>
+  <div class="color-info">
+    <div class="color-name">Terminal black</div>
+    <div class="color-value">#0d1117</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #3fb950;"></div>
+  <div class="color-info">
+    <div class="color-name">ANSI green (desaturated)</div>
+    <div class="color-value">#3fb950</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #58a6ff;"></div>
+  <div class="color-info">
+    <div class="color-name">ANSI cyan</div>
+    <div class="color-value">#58a6ff</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #d29922;"></div>
+  <div class="color-info">
+    <div class="color-name">ANSI yellow</div>
+    <div class="color-value">#d29922</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #f85149;"></div>
+  <div class="color-info">
+    <div class="color-name">ANSI red</div>
+    <div class="color-value">#f85149</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #30363d;"></div>
+  <div class="color-info">
+    <div class="color-name">Status gray</div>
+    <div class="color-value">#30363d</div>
+  </div>
+</div>
+
+<h3>Signature Element</h3>
+<p><strong>Mobile modifier toolbar</strong>: A floating toolbar with Ctrl, Alt, Esc, Tab, arrow keys, and tmux prefix (Ctrl+B). This element is unique to terminal management on mobile — no other product category has this. It should feel like a physical keyboard overlay, not a web UI component.</p>
+
+<h3>Defaults to Reject</h3>
+<ol>
+  <li><strong>Generic dashboard layout</strong> (sidebar + cards + breadcrumbs) → Replace with: full-screen terminal view with collapsible session drawer</li>
+  <li><strong>Material Design aesthetic</strong> (rounded corners, shadows, floating cards) → Replace with: flat terminal aesthetic, minimal borders, background color shifts for hierarchy</li>
+  <li><strong>Large padding and breathing room</strong> → Replace with: dense layout like real terminals, 4px base unit</li>
+  <li><strong>Gradient backgrounds</strong> → Replace with: flat colors, subtle noise texture optional</li>
+  <li><strong>Rounded buttons</strong> → Replace with: sharp or minimal radius (2px max)</li>
+</ol>
+
+<hr>
+
+<h2>Visual Architecture</h2>
+
+<h3>Layout Philosophy</h3>
+<p>Bridge app is a <strong>terminal emulator first</strong>, not a dashboard. The terminal should dominate the viewport. Session management is secondary — accessible but not always visible.</p>
+
+<h4>Desktop (≥1024px)</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ Sidebar (280px)  │  Terminal Area        │
+│ - Sessions list  │  - Active pane        │
+│ - Windows        │  - xterm.js           │
+│ - Quick actions  │  - Full height        │
+└─────────────────────────────────────────┘</div>
+
+<h4>Tablet (768-1023px)</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ [≡] Session: dev              [user ▼]  │
+├─────────────────────────────────────────┤
+│                                         │
+│  Terminal Area (full width)             │
+│                                         │
+└─────────────────────────────────────────┘</div>
+<p>Sidebar becomes overlay drawer, triggered by hamburger icon.</p>
+
+<h4>Mobile (&lt;768px)</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ [≡] dev:main                  [•••]     │
+├─────────────────────────────────────────┤
+│                                         │
+│                                         │
+│  Terminal Area (full screen)            │
+│                                         │
+│                                         │
+├─────────────────────────────────────────┤
+│ [Esc][Tab][Ctrl][Alt][C-b][↑][↓][←][→] │
+└─────────────────────────────────────────┘</div>
+<ul>
+  <li>Full-screen terminal (maximize vertical space)</li>
+  <li>Mobile toolbar fixed at bottom (44px height)</li>
+  <li>Top bar minimal (session name + menu)</li>
+  <li>Sidebar as full-screen drawer</li>
+</ul>
+
+<h3>Information Hierarchy</h3>
+
+<h4>Level 1 (Always visible)</h4>
+<ul>
+  <li>Active terminal pane</li>
+  <li>Mobile toolbar (on mobile)</li>
+  <li>Current session/window name (top bar)</li>
+</ul>
+
+<h4>Level 2 (Accessible, not always visible)</h4>
+<ul>
+  <li>Session list (drawer)</li>
+  <li>Window tabs (horizontal scroll below top bar on desktop)</li>
+  <li>Pane indicators (if multiple panes in window)</li>
+</ul>
+
+<h4>Level 3 (On-demand)</h4>
+<ul>
+  <li>Create new session/window</li>
+  <li>Settings/preferences</li>
+  <li>User menu</li>
+</ul>
+
+<h3>Spacing System</h3>
+<p>Base unit: <strong>4px</strong> (terminal density)</p>
+
+<pre><code>Spacing scale:
+--space-1: 4px   (icon gaps, tight padding)
+--space-2: 8px   (button padding, list item spacing)
+--space-3: 12px  (card padding, section gaps)
+--space-4: 16px  (major section separation)
+--space-5: 24px  (page margins on mobile)
+--space-6: 32px  (page margins on desktop)</code></pre>
+
+<p><strong>Terminal-specific spacing</strong>:</p>
+<ul>
+  <li>Terminal padding: 8px (space-2)</li>
+  <li>Between terminal panes: 2px (hairline gap)</li>
+  <li>Toolbar button padding: 12px 8px (space-3 space-2)</li>
+  <li>List item height: 36px (space-3 * 3)</li>
+</ul>
+
+<h3>Border Radius Scale</h3>
+<p>Sharp aesthetic, minimal rounding:</p>
+
+<pre><code>--radius-sm: 2px   (buttons, inputs)
+--radius-md: 4px   (cards, modals)
+--radius-lg: 8px   (drawer corners, mobile only)</code></pre>
+
+<div class="warning">
+  <strong>Never use</strong>: Large radius (12px+), pill shapes, circular buttons (except avatars).
+</div>
+
+<hr>
+
+<h2>Design System</h2>
+
+<h3>Color Tokens</h3>
+
+<h4>Background hierarchy (darkest to lightest)</h4>
+<div class="color-row">
+  <div class="color-swatch" style="background: #0d1117;"></div>
+  <div class="color-info">
+    <div class="color-name">--bg-canvas</div>
+    <div class="color-value">#0d1117 — Page background</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #161b22;"></div>
+  <div class="color-info">
+    <div class="color-name">--bg-surface</div>
+    <div class="color-value">#161b22 — Cards, sidebar, drawers</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #1c2128;"></div>
+  <div class="color-info">
+    <div class="color-name">--bg-surface-raised</div>
+    <div class="color-value">#1c2128 — Dropdowns, modals</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #2d333b;"></div>
+  <div class="color-info">
+    <div class="color-name">--bg-surface-overlay</div>
+    <div class="color-value">#2d333b — Tooltips, mobile toolbar</div>
+  </div>
+</div>
+
+<h4>Border hierarchy</h4>
+<div class="color-row">
+  <div class="color-swatch" style="background: #30363d;"></div>
+  <div class="color-info">
+    <div class="color-name">--border-default</div>
+    <div class="color-value">#30363d — Standard borders</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #21262d;"></div>
+  <div class="color-info">
+    <div class="color-name">--border-muted</div>
+    <div class="color-value">#21262d — Subtle separators</div>
+  </div>
+</div>
+
+<h4>Text hierarchy</h4>
+<div class="color-row">
+  <div class="color-swatch" style="background: #c9d1d9;"></div>
+  <div class="color-info">
+    <div class="color-name">--fg-default</div>
+    <div class="color-value">#c9d1d9 — Primary text</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #8b949e;"></div>
+  <div class="color-info">
+    <div class="color-name">--fg-muted</div>
+    <div class="color-value">#8b949e — Secondary text</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #6e7681;"></div>
+  <div class="color-info">
+    <div class="color-name">--fg-subtle</div>
+    <div class="color-value">#6e7681 — Tertiary/disabled</div>
+  </div>
+</div>
+
+<h4>Semantic colors (ANSI-inspired)</h4>
+<div class="color-row">
+  <div class="color-swatch" style="background: #58a6ff;"></div>
+  <div class="color-info">
+    <div class="color-name">--accent-primary</div>
+    <div class="color-value">#58a6ff — Cyan/blue, links, active states</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #3fb950;"></div>
+  <div class="color-info">
+    <div class="color-name">--success</div>
+    <div class="color-value">#3fb950 — Green, attached sessions, success</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #d29922;"></div>
+  <div class="color-info">
+    <div class="color-name">--warning</div>
+    <div class="color-value">#d29922 — Yellow/amber, warnings</div>
+  </div>
+</div>
+<div class="color-row">
+  <div class="color-swatch" style="background: #f85149;"></div>
+  <div class="color-info">
+    <div class="color-name">--danger</div>
+    <div class="color-value">#f85149 — Red, errors, destructive</div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Why these colors</strong>: Sourced from ANSI terminal palette and GitHub's dark mode (which itself is terminal-inspired). The cyan/blue accent (#58a6ff) is the classic "cyan" from ANSI, desaturated for dark mode. Green (#3fb950) is the classic "green" for success/active states.
+</div>
+
+<h3>Typography</h3>
+
+<h4>Font families</h4>
+<pre><code>--font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+--font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Liberation Mono', monospace;</code></pre>
+
+<h4>Type scale (base 14px, 1.25 ratio for terminal density)</h4>
+<pre><code>--text-xs: 11px;      /* Captions, badges */
+--text-sm: 12px;      /* Secondary text, list items */
+--text-base: 14px;    /* Body text, inputs */
+--text-lg: 16px;      /* Subheadings */
+--text-xl: 18px;      /* Page titles */
+--text-2xl: 24px;     /* Hero numbers (session count) */</code></pre>
+
+<h4>Font weights</h4>
+<ul>
+  <li>Regular (400): Body text</li>
+  <li>Medium (500): Buttons, labels, list items</li>
+  <li>Semibold (600): Headings, emphasis</li>
+</ul>
+
+<h4>Line heights</h4>
+<ul>
+  <li>Tight (1.25): Headings, single-line UI</li>
+  <li>Normal (1.5): Body text, descriptions</li>
+  <li>Relaxed (1.75): Long-form text (rare in this app)</li>
+</ul>
+
+<h4>Monospace usage</h4>
+<ul>
+  <li>Terminal output (xterm.js): 14px desktop, 13px mobile</li>
+  <li>Code snippets, command names: 13px</li>
+  <li>Session/window names: 13px mono for technical feel</li>
+</ul>
+
+<h3>Border & Depth System</h3>
+
+<p><strong>Border approach</strong>: Minimal borders, rely on background color shifts.</p>
+
+<pre><code>/* Border weights */
+--border-width-hairline: 1px;   /* Standard */
+--border-width-thick: 2px;      /* Focus rings, active states */
+
+/* Usage */
+border: 1px solid var(--border-default);  /* Cards, inputs */
+border-bottom: 1px solid var(--border-muted);  /* List separators */
+border-left: 2px solid var(--accent-primary);  /* Active session indicator */</code></pre>
+
+<p><strong>Depth strategy</strong>: Background color shifts, not shadows.</p>
+
+<pre><code>Elevation 0 (canvas): --bg-canvas
+Elevation 1 (surface): --bg-surface
+Elevation 2 (raised): --bg-surface-raised
+Elevation 3 (overlay): --bg-surface-overlay</code></pre>
+
+<div class="note">
+  <strong>No box-shadows</strong> except for:
+  <ul>
+    <li>Mobile toolbar (to separate from terminal): <code>0 -2px 8px rgba(0,0,0,0.3)</code></li>
+    <li>Dropdowns (rare): <code>0 4px 12px rgba(0,0,0,0.4)</code></li>
+  </ul>
+</div>
+
+<h3>Component States</h3>
+
+<h4>Interactive elements (buttons, list items, tabs)</h4>
+
+<pre><code>/* Default */
+background: transparent;
+color: var(--fg-default);
+border: 1px solid var(--border-default);
+
+/* Hover */
+background: var(--hover-bg);
+
+/* Active (pressed) */
+background: var(--active-bg);
+
+/* Focus */
+outline: 2px solid var(--focus-ring);
+outline-offset: 2px;
+
+/* Disabled */
+opacity: 0.5;
+cursor: not-allowed;</code></pre>
+
+<h4>Data states (for SessionList, WindowTabs, etc.)</h4>
+<ol>
+  <li><strong>Loading</strong>: Skeleton rows (gray rectangles) or spinner</li>
+  <li><strong>Empty</strong>: Icon + message + CTA button</li>
+  <li><strong>Error</strong>: Red border + error message + retry button</li>
+  <li><strong>Data</strong>: Normal rendering</li>
+</ol>
+
+<hr>
+
+<h2>Component Guide</h2>
+
+<h3>1. LoginForm</h3>
+<p><strong>Purpose</strong>: Minimal authentication screen.</p>
+
+<h4>Layout</h4>
+<ul>
+  <li>Centered vertically and horizontally</li>
+  <li>Max width 320px</li>
+  <li>No sidebar, no top bar</li>
+</ul>
+
+<h4>Structure</h4>
+<div class="component-diagram">[App logo/name] (24px, mono, centered)
+
+[Username input] (full width, 40px height)
+[Password input] (full width, 40px height)
+
+[Sign in button] (full width, 40px height, accent color)
+
+[Error message] (if present, danger color, 12px)</div>
+
+<h4>Tokens</h4>
+<ul>
+  <li>Background: <code>--bg-canvas</code></li>
+  <li>Input background: <code>--bg-surface</code></li>
+  <li>Input border: <code>--border-default</code></li>
+  <li>Button background: <code>--accent-primary</code></li>
+  <li>Button text: <code>--fg-on-emphasis</code></li>
+</ul>
+
+<h4>Implementation notes</h4>
+<ul>
+  <li>Inputs have 2px radius</li>
+  <li>Focus ring: <code>--focus-ring</code></li>
+  <li>Error state: inputs get <code>--danger</code> border</li>
+  <li>Button has no hover state on mobile (touch device)</li>
+</ul>
+
+<h3>2. AppShell</h3>
+<p><strong>Purpose</strong>: Main layout container with responsive sidebar.</p>
+
+<h4>Desktop (≥1024px)</h4>
+<pre><code>display: grid;
+grid-template-columns: 280px 1fr;
+height: 100vh;
+overflow: hidden;</code></pre>
+
+<h4>Tablet (768-1023px)</h4>
+<pre><code>/* Sidebar is overlay drawer */
+position: relative;
+height: 100vh;
+/* Sidebar: position: fixed, left: 0, transform: translateX(-100%) when closed */</code></pre>
+
+<h4>Mobile (&lt;768px)</h4>
+<pre><code>/* Full-screen, sidebar is drawer */
+flex-direction: column;
+height: 100vh;
+height: 100dvh; /* Dynamic viewport for mobile browsers */</code></pre>
+
+<ul>
+  <li>Sidebar width: 280px (desktop), 260px (tablet drawer)</li>
+  <li>Sidebar background: <code>--bg-surface</code> (slightly lighter than canvas)</li>
+  <li>Sidebar border: <code>border-right: 1px solid var(--border-default)</code></li>
+</ul>
+
+<h3>3. SessionList</h3>
+<p><strong>Purpose</strong>: Scrollable list of tmux sessions in sidebar.</p>
+
+<h4>Structure</h4>
+<div class="component-diagram">[Sidebar header]
+  [App name] [User menu icon]
+
+[Session items] (scrollable)
+  [Session 1] (active)
+  [Session 2]
+  [Session 3]
+
+[Create session button] (fixed at bottom)</div>
+
+<h4>Session item</h4>
+<div class="component-diagram">┌─────────────────────────────┐
+│ ● dev                    3w │  ← Name (mono) + window count
+│   attached                    │  ← Status (muted text)
+└─────────────────────────────┘</div>
+
+<ul>
+  <li>Height: 48px</li>
+  <li>Padding: 12px</li>
+  <li>Background: transparent (default), <code>--active-bg</code> (selected)</li>
+  <li>Left border: 2px <code>--accent-primary</code> when active</li>
+  <li>Status dot: 8px circle, <code>--success</code> if attached, <code>--fg-muted</code> if detached</li>
+  <li>Window count: right-aligned, muted text</li>
+</ul>
+
+<h4>Create session button</h4>
+<ul>
+  <li>Fixed at bottom of sidebar</li>
+  <li>Full width, 40px height</li>
+  <li>Icon (+) + "New session" text</li>
+  <li>Background: <code>--bg-surface-raised</code></li>
+</ul>
+
+<h4>States</h4>
+<ul>
+  <li><strong>Loading</strong>: 3 skeleton rows (gray rectangles)</li>
+  <li><strong>Empty</strong>: "No sessions" + "Create your first session" button</li>
+  <li><strong>Error</strong>: Red border + "Failed to load sessions" + retry</li>
+</ul>
+
+<h3>4. WindowTabs</h3>
+<p><strong>Purpose</strong>: Horizontal tabs for windows within a session.</p>
+
+<h4>Desktop layout</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ [Window 1] [Window 2] [Window 3]        │
+├─────────────────────────────────────────┤
+│ Terminal area                            │
+└─────────────────────────────────────────┘</div>
+
+<h4>Mobile layout (horizontal scroll)</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ [Win 1] [Win 2] [Win 3] [Win 4] →      │
+├─────────────────────────────────────────┤
+│ Terminal area                            │
+└─────────────────────────────────────────┘</div>
+
+<h4>Tab structure</h4>
+<div class="component-diagram">┌──────────────────┐
+│ main          [x]│  ← Name + close icon (on hover)
+└──────────────────┘</div>
+
+<ul>
+  <li>Height: 36px</li>
+  <li>Padding: 8px 16px</li>
+  <li>Font: mono, 13px</li>
+  <li>Background: transparent (inactive), <code>--bg-surface</code> (active)</li>
+  <li>Border: <code>border-bottom: 2px solid var(--accent-primary)</code> when active</li>
+  <li>Close icon: 16px, appears on hover (desktop) or long-press (mobile)</li>
+</ul>
+
+<h4>Container</h4>
+<ul>
+  <li>Background: <code>--bg-canvas</code></li>
+  <li>Border-bottom: <code>1px solid var(--border-default)</code></li>
+  <li>Overflow-x: auto (mobile), visible (desktop)</li>
+</ul>
+
+<h4>States</h4>
+<ul>
+  <li><strong>Loading</strong>: 2 skeleton tabs</li>
+  <li><strong>Empty</strong>: Single "default" tab (can't be closed)</li>
+  <li><strong>Error</strong>: N/A (windows always exist if session exists)</li>
+</ul>
+
+<h3>5. PaneGrid</h3>
+<p><strong>Purpose</strong>: Display multiple panes within a window.</p>
+
+<h4>Layout logic</h4>
+<ul>
+  <li>1 pane: full width, full height</li>
+  <li>2 panes: 50/50 split (horizontal or vertical based on tmux layout)</li>
+  <li>3+ panes: grid (2 columns, wrap)</li>
+</ul>
+
+<h4>Desktop: 2 panes (vertical split)</h4>
+<div class="component-diagram">┌──────────────────┬──────────────────┐
+│                  │                  │
+│   Pane 1         │   Pane 2         │
+│                  │                  │
+└──────────────────┴──────────────────┘</div>
+
+<h4>Desktop: 2 panes (horizontal split)</h4>
+<div class="component-diagram">┌─────────────────────────────────────┐
+│                                     │
+│   Pane 1                            │
+│                                     │
+├─────────────────────────────────────┤
+│                                     │
+│   Pane 2                            │
+│                                     │
+└─────────────────────────────────────┘</div>
+
+<h4>Mobile</h4>
+<ul>
+  <li>Single pane visible at a time (full screen)</li>
+  <li>Tab bar at top to switch panes (if multiple)</li>
+</ul>
+
+<h4>Pane separator</h4>
+<ul>
+  <li>Width: 2px</li>
+  <li>Background: <code>--border-default</code></li>
+  <li>Not draggable (read-only layout)</li>
+</ul>
+
+<h4>Pane header (if multiple panes)</h4>
+<div class="component-diagram">┌─────────────────────────────────────┐
+│ Pane 1: bash              [maximize]│
+├─────────────────────────────────────┤
+│ Terminal                             │
+└─────────────────────────────────────┘</div>
+<ul>
+  <li>Height: 28px</li>
+  <li>Background: <code>--bg-surface</code></li>
+  <li>Font: mono, 12px</li>
+  <li>Maximize icon: expands pane to full screen</li>
+</ul>
+
+<h3>6. TerminalView</h3>
+<p><strong>Purpose</strong>: xterm.js instance with WebSocket connection.</p>
+
+<h4>Structure</h4>
+<div class="component-diagram">┌─────────────────────────────────────┐
+│                                     │
+│  xterm.js terminal                  │
+│  (fills container)                  │
+│                                     │
+│                                     │
+└─────────────────────────────────────┘</div>
+
+<h4>Container</h4>
+<ul>
+  <li>Background: <code>--terminal-bg</code></li>
+  <li>Padding: 8px</li>
+  <li>Border: none (or 1px <code>--border-default</code> if in grid)</li>
+  <li>Touch-action: <code>none</code> (disable pinch-zoom on terminal)</li>
+</ul>
+
+<h4>xterm.js theme</h4>
+<pre><code>{
+  background: '#0d1117',
+  foreground: '#c9d1d9',
+  cursor: '#58a6ff',
+  cursorAccent: '#0d1117',
+  selectionBackground: 'rgba(88, 166, 255, 0.3)',
+  black: '#0d1117',
+  red: '#f85149',
+  green: '#3fb950',
+  yellow: '#d29922',
+  blue: '#58a6ff',
+  magenta: '#bc8cff',
+  cyan: '#39c5cf',
+  white: '#c9d1d9',
+  brightBlack: '#484f58',
+  brightRed: '#ff7b72',
+  brightGreen: '#7ee787',
+  brightYellow: '#e3b341',
+  brightBlue: '#79c0ff',
+  brightMagenta: '#d2a8ff',
+  brightCyan: '#56d4dd',
+  brightWhite: '#ffffff'
+}</code></pre>
+
+<h4>Font</h4>
+<ul>
+  <li>Family: <code>--font-mono</code></li>
+  <li>Size: 14px (desktop), 13px (mobile)</li>
+  <li>Line height: 1.2</li>
+</ul>
+
+<h4>Scrollbar</h4>
+<ul>
+  <li>Custom styled (not browser default)</li>
+  <li>Width: 6px</li>
+  <li>Track: transparent</li>
+  <li>Thumb: <code>--border-default</code>, rounded</li>
+  <li>Thumb hover: <code>--fg-muted</code></li>
+</ul>
+
+<h4>Resize handling</h4>
+<ul>
+  <li>FitAddon: auto-resize to container</li>
+  <li>Debounce: 100ms</li>
+  <li>Send resize event to backend via WebSocket</li>
+</ul>
+
+<h4>States</h4>
+<ul>
+  <li><strong>Connecting</strong>: "Connecting..." overlay</li>
+  <li><strong>Connected</strong>: Normal terminal</li>
+  <li><strong>Disconnected</strong>: "Disconnected" overlay + reconnect button</li>
+  <li><strong>Error</strong>: Red overlay + error message + retry</li>
+</ul>
+
+<h3>7. MobileToolbar</h3>
+<p><strong>Purpose</strong>: Floating keyboard overlay for mobile terminal control.</p>
+
+<h4>Layout</h4>
+<div class="component-diagram">┌─────────────────────────────────────────┐
+│ [Esc][Tab][Ctrl][Alt][C-b][↑][↓][←][→] │
+└─────────────────────────────────────────┘</div>
+
+<h4>Structure</h4>
+<ul>
+  <li>Fixed at bottom, above mobile keyboard</li>
+  <li>Height: 44px</li>
+  <li>Background: <code>--bg-surface-overlay</code></li>
+  <li>Box-shadow: <code>0 -2px 8px rgba(0,0,0,0.3)</code> (to separate from terminal)</li>
+  <li>Z-index: 1000 (above terminal)</li>
+</ul>
+
+<h4>Buttons</h4>
+<ul>
+  <li>Min width: 44px (touch target)</li>
+  <li>Height: 36px (leaves 4px padding top/bottom)</li>
+  <li>Padding: 8px</li>
+  <li>Font: mono, 13px, medium weight</li>
+  <li>Background: <code>--bg-surface-raised</code></li>
+  <li>Border: 1px solid <code>--border-default</code></li>
+  <li>Border-radius: 2px</li>
+</ul>
+
+<h4>Button states</h4>
+<ul>
+  <li><strong>Default</strong>: <code>--bg-surface-raised</code></li>
+  <li><strong>Pressed</strong>: <code>--active-bg</code></li>
+  <li><strong>Sticky (Ctrl/Alt held)</strong>: <code>--accent-primary</code> background, white text</li>
+</ul>
+
+<h4>Sticky modifier logic</h4>
+<ul>
+  <li>Tap Ctrl → enters sticky mode (highlighted)</li>
+  <li>Next key press → sends Ctrl+key, exits sticky mode</li>
+  <li>Tap Ctrl again → exits sticky mode without sending</li>
+</ul>
+
+<h4>Responsive button layout</h4>
+<ul>
+  <li>Portrait: All 9 buttons in single row, scrollable if needed</li>
+  <li>Landscape: All 9 buttons fit without scroll</li>
+</ul>
+
+<h4>Hide/show</h4>
+<ul>
+  <li>Auto-hide when mobile keyboard opens (detect via <code>visualViewport</code> API)</li>
+  <li>Show when keyboard closes</li>
+  <li>Manual toggle: long-press terminal → "Hide toolbar" option</li>
+</ul>
+
+<h3>8. Button Component</h3>
+<p><strong>Variants</strong>:</p>
+
+<h4>Primary (accent)</h4>
+<pre><code>background: var(--accent-primary);
+color: var(--fg-on-emphasis);
+border: none;
+/* Hover */
+background: var(--accent-secondary);</code></pre>
+
+<h4>Secondary (outline)</h4>
+<pre><code>background: transparent;
+color: var(--fg-default);
+border: 1px solid var(--border-default);
+/* Hover */
+background: var(--hover-bg);</code></pre>
+
+<h4>Danger</h4>
+<pre><code>background: var(--danger-muted);
+color: var(--fg-on-emphasis);
+border: none;
+/* Hover */
+background: var(--danger);</code></pre>
+
+<h4>Ghost (minimal)</h4>
+<pre><code>background: transparent;
+color: var(--fg-muted);
+border: none;
+/* Hover */
+background: var(--hover-bg);
+color: var(--fg-default);</code></pre>
+
+<h4>Sizes</h4>
+<ul>
+  <li>Small: height 28px, padding 4px 12px, font 12px</li>
+  <li>Medium: height 36px, padding 8px 16px, font 14px</li>
+  <li>Large: height 40px, padding 12px 20px, font 14px</li>
+</ul>
+
+<p><strong>Border-radius</strong>: 2px (sharp)</p>
+
+<h3>9. Input Component</h3>
+
+<h4>Structure</h4>
+<div class="component-diagram">[Label] (optional, 12px, muted)
+[Input field]
+[Helper text] (optional, 12px, muted or danger)</div>
+
+<h4>Input field</h4>
+<ul>
+  <li>Height: 40px</li>
+  <li>Padding: 8px 12px</li>
+  <li>Background: <code>--bg-surface</code></li>
+  <li>Border: 1px solid <code>--border-default</code></li>
+  <li>Border-radius: 2px</li>
+  <li>Font: 14px</li>
+</ul>
+
+<h4>States</h4>
+<ul>
+  <li><strong>Default</strong>: <code>--border-default</code></li>
+  <li><strong>Focus</strong>: <code>--border-default</code> + focus ring (<code>--focus-ring</code>)</li>
+  <li><strong>Error</strong>: <code>--danger</code> border</li>
+  <li><strong>Disabled</strong>: opacity 0.5</li>
+</ul>
+
+<p><strong>Placeholder</strong>: <code>--fg-subtle</code></p>
+
+<h3>10. Modal Component</h3>
+
+<h4>Structure</h4>
+<div class="component-diagram">┌─────────────────────────────────────┐
+│                                     │
+│  ┌───────────────────────────────┐  │
+│  │ Modal title            [x]    │  │
+│  ├───────────────────────────────┤  │
+│  │                               │  │
+│  │ Modal content                 │  │
+│  │                               │  │
+│  ├───────────────────────────────┤  │
+│  │        [Cancel] [Confirm]     │  │
+│  └───────────────────────────────┘  │
+│                                     │
+└─────────────────────────────────────┘</div>
+
+<h4>Overlay</h4>
+<ul>
+  <li>Background: <code>rgba(0, 0, 0, 0.5)</code></li>
+  <li>Backdrop-filter: blur(4px) (optional, modern browsers)</li>
+</ul>
+
+<h4>Modal container</h4>
+<ul>
+  <li>Max-width: 400px (desktop), 90% (mobile)</li>
+  <li>Background: <code>--bg-surface-raised</code></li>
+  <li>Border: 1px solid <code>--border-default</code></li>
+  <li>Border-radius: 4px</li>
+  <li>Box-shadow: <code>0 4px 12px rgba(0,0,0,0.4)</code></li>
+</ul>
+
+<h4>Header</h4>
+<ul>
+  <li>Padding: 16px</li>
+  <li>Border-bottom: 1px solid <code>--border-muted</code></li>
+  <li>Title: 16px, semibold</li>
+  <li>Close icon: 20px, right-aligned</li>
+</ul>
+
+<h4>Content</h4>
+<ul>
+  <li>Padding: 16px</li>
+</ul>
+
+<h4>Footer</h4>
+<ul>
+  <li>Padding: 16px</li>
+  <li>Border-top: 1px solid <code>--border-muted</code></li>
+  <li>Buttons: right-aligned, 8px gap</li>
+</ul>
+
+<hr>
+
+<h2>Implementation Notes</h2>
+
+<h3>Tailwind CSS v4 Setup</h3>
+<p>In <code>web/src/globals.css</code>:</p>
+
+<pre><code>@import "tailwindcss";
+
+@theme {
+  --color-canvas: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-raised: #1c2128;
+  --color-surface-overlay: #2d333b;
+  
+  --color-border-default: #30363d;
+  --color-border-muted: #21262d;
+  
+  --color-text-default: #c9d1d9;
+  --color-text-muted: #8b949e;
+  --color-text-subtle: #6e7681;
+  
+  --color-accent: #58a6ff;
+  --color-accent-hover: #79c0ff;
+  --color-success: #3fb950;
+  --color-warning: #d29922;
+  --color-danger: #f85149;
+  
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+}</code></pre>
+
+<h3>Component File Structure</h3>
+<pre><code>web/src/components/
+├── auth/
+│   ├── LoginForm.tsx
+│   └── ProtectedRoute.tsx
+├── layout/
+│   ├── AppShell.tsx
+│   ├── TopBar.tsx
+│   └── Sidebar.tsx
+├── session/
+│   ├── SessionList.tsx
+│   ├── SessionCard.tsx
+│   ├── WindowTabs.tsx
+│   ├── PaneGrid.tsx
+│   └── CreateSessionButton.tsx
+├── terminal/
+│   ├── TerminalView.tsx
+│   ├── TerminalTabs.tsx
+│   └── MobileToolbar.tsx
+└── ui/
+    ├── Button.tsx
+    ├── Input.tsx
+    ├── Modal.tsx
+    └── Spinner.tsx</code></pre>
+
+<h3>Key Interactions</h3>
+<ol>
+  <li><strong>Session selection</strong>: Click session in sidebar → update route to <code>/sessions/:id</code> → load windows → auto-select first window → show panes</li>
+  <li><strong>Window switching</strong>: Click tab → update route to <code>/sessions/:id?window=:windowId</code> → load panes for that window</li>
+  <li><strong>Terminal focus</strong>: Tap terminal → focus xterm.js → show mobile toolbar (if hidden)</li>
+  <li><strong>Mobile toolbar</strong>: Tap modifier (Ctrl/Alt) → sticky mode → tap key → send key combo → exit sticky</li>
+  <li><strong>Sidebar drawer (mobile)</strong>: Swipe right from left edge OR tap hamburger → open drawer → tap outside OR swipe left → close</li>
+</ol>
+
+<h3>Animation & Transitions</h3>
+<pre><code>/* Fast micro-interactions */
+--transition-fast: 100ms ease;
+
+/* Standard transitions */
+--transition-base: 150ms ease;
+
+/* Drawer/modal animations */
+--transition-slow: 200ms ease;
+
+/* Sidebar drawer */
+transform: translateX(-100%);
+transition: transform var(--transition-slow);
+/* Open state */
+transform: translateX(0);
+
+/* Modal */
+opacity: 0;
+transform: scale(0.95);
+transition: opacity var(--transition-slow), transform var(--transition-slow);
+/* Open state */
+opacity: 1;
+transform: scale(1);</code></pre>
+
+<h3>Accessibility</h3>
+<ul>
+  <li>All interactive elements have <code>:focus-visible</code> styles</li>
+  <li>Touch targets minimum 44x44px</li>
+  <li>Color contrast ratio ≥ 4.5:1 for text</li>
+  <li>ARIA labels for icon-only buttons</li>
+  <li>Keyboard navigation for desktop (Tab, Enter, Esc)</li>
+  <li>Screen reader announcements for state changes (e.g., "Session created")</li>
+</ul>
+
+<h3>Performance</h3>
+<ul>
+  <li>Lazy load TerminalView (code splitting)</li>
+  <li>Virtualize session list if &gt;50 sessions</li>
+  <li>Debounce terminal resize events (100ms)</li>
+  <li>Use <code>will-change: transform</code> for drawer animations</li>
+  <li>Preload fonts (JetBrains Mono) in <code>&lt;head&gt;</code></li>
+</ul>
+
+<hr>
+
+<h2>Design Decisions Log</h2>
+
+<h4>Why no shadows?</h4>
+<p>Terminal emulators are flat. Shadows imply depth/material design, which conflicts with the terminal aesthetic. Background color shifts provide hierarchy without shadows.</p>
+
+<h4>Why sharp corners (2px radius)?</h4>
+<p>Terminals are sharp. Kitty, Alacritty, iTerm2 all use sharp or minimal rounding. Large radius feels "app-like" not "terminal-like".</p>
+
+<h4>Why dense spacing (4px base)?</h4>
+<p>Real terminals are dense. Users want maximum content visibility. Generous padding wastes screen real estate, especially on mobile.</p>
+
+<h4>Why ANSI colors?</h4>
+<p>The product IS a terminal tool. Using ANSI-inspired colors (cyan accent, green success, red danger) reinforces the domain and feels authentic.</p>
+
+<h4>Why monospace for session names?</h4>
+<p>Session names are technical identifiers (like file names or command names). Monospace signals "this is code/technical" and improves readability for mixed-case names.</p>
+
+<h4>Why mobile toolbar instead of gestures?</h4>
+<p>Gestures are discoverable but slow. A toolbar with explicit Ctrl/Alt/Esc buttons is faster and more reliable for terminal workflows. Power users need speed.</p>
+
+<h4>Why no breadcrumbs?</h4>
+<p>The navigation is shallow: session → window → pane. Breadcrumbs add visual noise without value. Top bar shows current context sufficiently.</p>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Caddyfile — reverse proxy for bridge-app with auto-HTTPS
+# Install Caddy: https://caddyserver.com/docs/install#debian-ubuntu-raspbian
+# Place at: /etc/caddy/Caddyfile
+# Then: systemctl reload caddy
+
+your-domain.com {
+    reverse_proxy localhost:8080
+
+    # WebSocket support
+    @ws {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+    reverse_proxy @ws localhost:8080
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    }
+}

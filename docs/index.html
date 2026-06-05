@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tmux Bridge App — Plan de Implementación</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-secondary: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-secondary: #8b949e;
+    --accent: #58a6ff;
+    --accent-green: #3fb950;
+    --accent-orange: #d2991d;
+    --code-bg: #1c2128;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  h1 { font-size: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; color: #f0f6fc; }
+  h2 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 0.75rem; color: #f0f6fc; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+  h3 { font-size: 1.15rem; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #e6edf3; }
+  p { margin-bottom: 1rem; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 2rem 0; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th, td { padding: 0.5rem 0.75rem; text-align: left; border: 1px solid var(--border); }
+  th { background: var(--bg-secondary); font-weight: 600; color: #e6edf3; }
+  tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    font-size: 0.85rem;
+  }
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.85em;
+    background: var(--code-bg);
+    padding: 0.15em 0.35em;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+  pre code { border: none; padding: 0; background: none; }
+
+  .filetree {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    white-space: pre;
+  }
+
+  .badge-go { background: #00ADD8; color: #000; padding: 1px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+  .badge-ts { background: #3178C6; color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+  .badge-sql { background: #003B57; color: #fff; padding: 1px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+  .badge-ws { background: var(--accent-green); color: #000; padding: 1px 7px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+
+  .flow-diagram {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.25rem;
+    margin: 1rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+  li { margin-bottom: 0.25rem; }
+
+  .toc {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .toc ul { list-style: none; margin-left: 0; }
+  .toc li { margin-bottom: 0.3rem; }
+  .toc a { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<h1>Tmux Bridge App — Plan de Implementación</h1>
+
+<div class="toc">
+<h3>Documentación del Proyecto</h3>
+<ul>
+  <li><a href="roadmap.html">📊 Roadmap — Progreso de implementación</a></li>
+  <li><a href="design-system.html">🎨 Design System — Arquitectura visual y guía de componentes</a></li>
+  <li><a href="vision.html">👁️ Visión — Concepto y objetivos del producto</a></li>
+  <li><a href="brief.html">📝 Brief — Resumen ejecutivo para agentes</a></li>
+</ul>
+</div>
+
+<div class="toc">
+<h3>Índice del Plan</h3>
+<ul>
+  <li><a href="#objetivo">Objetivo</a></li>
+  <li><a href="#stack">Stack</a></li>
+  <li><a href="#estructura">Estructura del proyecto</a></li>
+  <li><a href="#data-models">Data Models</a></li>
+  <li><a href="#api-endpoints">API Endpoints</a></li>
+  <li><a href="#tmux-control-mode">tmux Control Mode — Pieza central</a></li>
+  <li><a href="#frontend">Frontend: Component Tree &amp; Rutas</a></li>
+  <li><a href="#state-management">State Management</a></li>
+  <li><a href="#autenticacion">Autenticación</a></li>
+  <li><a href="#mobile-ui">Mobile UI</a></li>
+  <li><a href="#backend-deps">Backend: Dependencias Go</a></li>
+  <li><a href="#orden">Orden de Implementación</a></li>
+  <li><a href="#verificacion">Verificación</a></li>
+</ul>
+</div>
+
+<h2 id="objetivo">Objetivo</h2>
+<p>Webapp mobile-friendly que actúa como bridge entre una UI web y sesiones tmux en una VPS. Reemplaza Termius con scroll fluido, gestión de sesiones multitáctil, y soporte multi-usuario con autenticación.</p>
+
+<h2 id="stack">Stack</h2>
+<table>
+  <tr><th>Capa</th><th>Tecnología</th></tr>
+  <tr><td>Backend</td><td><span class="badge-go">Go</span> (reusa <code>webtty</code> de GoTTY para el bridge PTY↔WebSocket)</td></tr>
+  <tr><td>Frontend</td><td><span class="badge-ts">React</span> + TanStack Router + TanStack Query + Tailwind CSS + xterm.js</td></tr>
+  <tr><td>Base de datos</td><td><span class="badge-sql">SQLite</span> (solo usuarios, las sesiones tmux son efímeras)</td></tr>
+  <tr><td>Autenticación</td><td>JWT + bcrypt</td></tr>
+  <tr><td>Transporte terminal</td><td><span class="badge-ws">WebSocket</span> + tmux control mode (<code>tmux -C attach</code>)</td></tr>
+</table>
+
+<hr>
+
+<h2 id="estructura">Estructura del proyecto</h2>
+<div class="filetree">bridge-app/
+├── Makefile
+├── go.mod / go.sum
+├── .gitignore
+│
+├── cmd/bridge-server/main.go          — Entrypoint
+│
+├── internal/
+│   ├── auth/
+│   │   ├── jwt.go                      — Token generation & validation
+│   │   ├── middleware.go               — JWT bearer middleware
+│   │   └── password.go                 — bcrypt
+│   ├── db/
+│   │   ├── sqlite.go                   — Open DB, migrations
+│   │   ├── users.go                    — CRUD users
+│   │   └── migrations.go              — DDL embebido
+│   ├── model/
+│   │   ├── user.go                     — User struct
+│   │   └── tmux.go                     — Session, Window, Pane structs
+│   ├── tmux/
+│   │   ├── cli.go                      — Wrappers de comandos tmux
+│   │   ├── parser.go                   — Parse de output tmux → structs
+│   │   ├── control.go                  — Gestión de tmux -C per pane
+│   │   └── slave.go                    — Implementación de webtty.Slave
+│   ├── api/
+│   │   ├── router.go                   — chi router, monta REST + WS
+│   │   ├── auth_handler.go             — /api/auth/*
+│   │   ├── session_handler.go          — /api/sessions/*
+│   │   └── ws_handler.go               — /api/ws/pane/*
+│   └── server/server.go                — HTTP server, graceful shutdown
+│
+├── web/
+│   ├── package.json, tsconfig.json, vite.config.ts
+│   ├── tailwind.config.ts, postcss.config.js
+│   ├── index.html
+│   └── src/
+│       ├── main.tsx                    — Root: providers
+│       ├── router.tsx                  — TanStack Router: route tree
+│       ├── globals.css                 — Tailwind + mobile styles
+│       ├── api/
+│       │   ├── client.ts              — fetch wrapper, JWT injection
+│       │   ├── auth.ts                — login, register, me, refresh
+│       │   └── sessions.ts           — REST calls tmux
+│       ├── hooks/
+│       │   ├── useAuth.ts
+│       │   ├── useTmuxWebSocket.ts    — WS lifecycle per pane
+│       │   └── useMobileDetect.ts
+│       ├── store/auth-context.tsx      — AuthContext (user, token)
+│       ├── components/
+│       │   ├── layout/                 — AppShell, TopBar, Sidebar
+│       │   ├── session/                — SessionCard, WindowTabs, PaneGrid
+│       │   ├── terminal/               — TerminalView, TerminalTabs, MobileToolbar
+│       │   ├── auth/                   — LoginForm, ProtectedRoute
+│       │   └── ui/                     — Button, Input, Modal, Spinner
+│       └── routes/
+│           ├── __root.tsx              — Auth guard + AppShell
+│           ├── index.tsx               — → redirect /sessions
+│           ├── login.tsx
+│           ├── sessions.tsx            — Dashboard: lista sesiones
+│           └── sessions_.$sessionId.tsx — Detalle sesión + terminales
+│
+└── scripts/
+    ├── install-go.sh                   — Instalación de Go
+    └── seed-user.sh                    — Crear primer usuario admin</div>
+
+<hr>
+
+<h2 id="data-models">Data Models</h2>
+
+<h3>User (SQLite)</h3>
+<pre><code>CREATE TABLE users (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    username   TEXT NOT NULL UNIQUE,
+    password   TEXT NOT NULL,                     -- bcrypt
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);</code></pre>
+
+<h3>Session / Window / Pane (efímeros, desde tmux CLI)</h3>
+<pre><code>type Session struct {
+    ID, Name        string
+    Windows         int
+    Created         string
+    Attached        bool
+}
+type Window struct {
+    ID, Name        string
+    Active          bool
+    Panes           []Pane
+}
+type Pane struct {
+    ID, Title       string
+    Active          bool
+    PID             string
+}</code></pre>
+
+<p>Se parsean con formato machine-readable:</p>
+<pre><code>tmux list-sessions -F "#{session_id}\t#{session_name}\t#{session_windows}\t#{session_created}\t#{session_attached}"
+tmux list-windows -t "$session" -F "#{window_index}\t#{window_name}\t#{window_active}"
+tmux list-panes -t "$session:$window" -F "#{pane_index}\t#{pane_title}\t#{pane_active}\t#{pane_pid}"</code></pre>
+
+<hr>
+
+<h2 id="api-endpoints">API Endpoints</h2>
+
+<h3>REST</h3>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Auth</th><th>Descripción</th></tr>
+  <tr><td><code>POST</code></td><td><code>/api/auth/register</code></td><td>No</td><td>Crear usuario</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>No</td><td>Login → JWT</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/auth/refresh</code></td><td>No</td><td>Refresh token</td></tr>
+  <tr><td><code>GET</code></td><td><code>/api/auth/me</code></td><td>JWT</td><td>Info usuario actual</td></tr>
+  <tr><td><code>GET</code></td><td><code>/api/sessions</code></td><td>JWT</td><td>Listar sesiones tmux</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/sessions</code></td><td>JWT</td><td>Crear sesión</td></tr>
+  <tr><td><code>DELETE</code></td><td><code>/api/sessions/:id</code></td><td>JWT</td><td>Matar sesión</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/sessions/:id/rename</code></td><td>JWT</td><td>Renombrar</td></tr>
+  <tr><td><code>GET</code></td><td><code>/api/sessions/:id/windows</code></td><td>JWT</td><td>Listar ventanas</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/sessions/:id/windows</code></td><td>JWT</td><td>Crear ventana</td></tr>
+  <tr><td><code>DELETE</code></td><td><code>/api/sessions/:id/windows/:win</code></td><td>JWT</td><td>Matar ventana</td></tr>
+  <tr><td><code>GET</code></td><td><code>/api/sessions/:id/windows/:win/panes</code></td><td>JWT</td><td>Listar panes</td></tr>
+  <tr><td><code>POST</code></td><td><code>/api/sessions/:id/windows/:win/panes</code></td><td>JWT</td><td>Split pane</td></tr>
+  <tr><td><code>DELETE</code></td><td><code>/api/sessions/:id/windows/:win/panes/:pane</code></td><td>JWT</td><td>Matar pane</td></tr>
+</table>
+
+<h3>WebSocket</h3>
+<table>
+  <tr><th>Path</th><th>Auth</th><th>Descripción</th></tr>
+  <tr><td><code>GET /api/ws/pane/:sessionId/:windowId/:paneId?token=jwt</code></td><td>JWT query param</td><td>Bridge xterm.js ↔ tmux -C</td></tr>
+</table>
+
+<h3>Static files</h3>
+<p><code>/*</code> → sirve <code>web/dist/</code> (SPA catch-all)</p>
+
+<hr>
+
+<h2 id="tmux-control-mode">tmux Control Mode — Pieza central</h2>
+
+<h3>Flujo</h3>
+<div class="flow-diagram">Browser xterm.js  ←WebSocket→  Go server  ←PTY (stdin/stdout)→  tmux -C attach -t sess:win.pane</div>
+
+<h3>Slave.go — Implementación de <code>webtty.Slave</code></h3>
+<pre><code>// internal/tmux/slave.go
+type TmuxControlSlave struct {
+    cmd  *exec.Cmd
+    ptmx *os.File  // PTY master — leemos/escribimos por acá
+}
+
+func NewTmuxControlSlave(sessionID, windowID, paneID string) (*TmuxControlSlave, error) {
+    // 1. Crear PTY pair
+    ptmx, pts, _ := pty.Open()
+    // 2. Spawnear tmux en control mode
+    target := fmt.Sprintf("%s:%s.%s", sessionID, windowID, paneID)
+    cmd := exec.Command("tmux", "-C", "attach", "-t", target)
+    cmd.Stdin = pts
+    cmd.Stdout = pts
+    cmd.Stderr = os.Stderr
+    cmd.Start()
+    return &TmuxControlSlave{cmd: cmd, ptmx: ptmx}, nil
+}
+
+func (s *TmuxControlSlave) Read(p []byte) (int, error)  { return s.ptmx.Read(p) }
+func (s *TmuxControlSlave) Write(p []byte) (int, error) { return s.ptmx.Write(p) }
+func (s *TmuxControlSlave) Close() error {
+    s.ptmx.Close()
+    return s.cmd.Wait()
+}
+func (s *TmuxControlSlave) ResizeTerminal(cols, rows int) error {
+    return termios.SetWinsize(s.ptmx.Fd(), &termios.Winsize{
+        Width: uint16(cols), Height: uint16(rows),
+    })
+}</code></pre>
+
+<h3>¿Por qué PTY en vez de pipe directo?</h3>
+<p><code>webtty</code> necesita <code>ResizeTerminal</code> para enviar <code>SIGWINCH</code> — tmux ajusta el layout del pane cuando recibe esa señal. Un pipe directo no lo soporta.</p>
+
+<h3>Ciclo de vida</h3>
+<ol>
+  <li>Cliente abre WebSocket → server valida JWT</li>
+  <li>Server spawn <code>tmux -C attach</code> via PTY</li>
+  <li><code>webtty.Run(slave, wsConn)</code> → goroutines de read/write</li>
+  <li>WebSocket cierra → <code>slave.Close()</code> → mata el proceso <code>tmux -C</code> (la sesión/pane sigue vivo, solo se desadjunta)</li>
+</ol>
+
+<hr>
+
+<h2 id="frontend">Frontend: Component Tree &amp; Rutas</h2>
+
+<h3>TanStack Router</h3>
+<pre><code>/                 → redirect /sessions
+/login            → LoginForm (sin chrome)
+/sessions         → SessionsListPage (dashboard)
+/sessions/$id     → SessionDetailPage (terminales)</code></pre>
+
+<h3>Jerarquía de componentes</h3>
+<pre><code>&lt;QueryClientProvider&gt;
+  &lt;AuthProvider&gt;
+    &lt;RouterProvider&gt;
+      &lt;RootLayout&gt;                          // auth guard + AppShell
+        &lt;TopBar&gt;&lt;UserMenu /&gt;&lt;/TopBar&gt;
+        &lt;Sidebar&gt;
+          &lt;SessionList /&gt;                   // TanStack Query: useQuery sessions
+          &lt;CreateSessionButton /&gt;
+        &lt;/Sidebar&gt;
+        &lt;main&gt;&lt;Outlet /&gt;&lt;/main&gt;             // contenido de ruta hija
+      &lt;/RootLayout&gt;
+      &lt;!-- /sessions → SessionsListPage --&gt;
+      &lt;!-- /sessions/$id → SessionDetailPage --&gt;
+        &lt;WindowTabs windows={...}&gt;
+          &lt;PaneGrid panes={...}&gt;
+            &lt;TerminalView pane={p} /&gt;       // xterm.js + WebSocket
+          &lt;/PaneGrid&gt;
+        &lt;/WindowTabs&gt;
+        &lt;MobileToolbar /&gt;                   // fixed bottom bar en mobile
+    &lt;/RouterProvider&gt;
+  &lt;/AuthProvider&gt;
+&lt;/QueryClientProvider&gt;</code></pre>
+
+<hr>
+
+<h2 id="state-management">State Management</h2>
+
+<table>
+  <tr><th>Qué</th><th>Con qué</th></tr>
+  <tr><td>Auth (user, token)</td><td>React Context (<code>AuthContext</code>)</td></tr>
+  <tr><td>Lista de sesiones</td><td>TanStack Query <code>useQuery</code> + refetchInterval 5s</td></tr>
+  <tr><td>Ventanas de sesión</td><td>TanStack Query <code>useQuery</code> keyed by sessionId</td></tr>
+  <tr><td>Panes de ventana</td><td>TanStack Query <code>useQuery</code> keyed by sessionId+windowId</td></tr>
+  <tr><td>WebSocket xterm</td><td><code>useRef</code> dentro de <code>useTmuxWebSocket</code> hook</td></tr>
+  <tr><td>Toolbar mobile</td><td><code>useState</code> + <code>useMobileDetect</code></td></tr>
+  <tr><td>Sidebar open/closed</td><td><code>useState</code> + cookie</td></tr>
+</table>
+
+<hr>
+
+<h2 id="autenticacion">Autenticación</h2>
+
+<div class="flow-diagram">
+POST /api/auth/login → bcrypt.Compare → JWT (access 15min, refresh 7d)
+  ↓
+Frontend: AuthContext guarda tokens en memoria (no localStorage)
+  ↓
+API client inyecta Authorization: Bearer &lt;token&gt;
+  ↓
+401 → POST /api/auth/refresh → retry
+  ↓
+WebSocket: new WebSocket("ws://host/api/ws/pane/...?token=" + jwt)
+</div>
+
+<hr>
+
+<h2 id="mobile-ui">Mobile UI</h2>
+
+<h3>MobileToolbar (fija abajo, solo en touch &lt; 768px)</h3>
+<div class="flow-diagram">[Esc] [Tab] [Ctrl] [Alt] [C-b] [▲] [▼] [◀] [▶]</div>
+
+<ul>
+  <li>Cada botón envía secuencia de escape a xterm.js</li>
+  <li>Long-press en Ctrl/Alt → sticky mode</li>
+  <li>Swipe up en toolbar → fila extendida con <code>/</code>, <code>:</code>, <code>-</code>, <code>Space</code></li>
+</ul>
+
+<h3>xterm.js config para mobile</h3>
+<pre><code>fontSize: 13, cursorBlink: true, cursorStyle: 'bar'
+Addons: FitAddon, WebglAddon, WebLinksAddon</code></pre>
+
+<h3>Layout responsivo</h3>
+<table>
+  <tr><th>≥ 1024px</th><td>Sidebar 280px + main</td></tr>
+  <tr><th>768-1023px</th><td>Sidebar overlay colapsable</td></tr>
+  <tr><th>&lt; 768px</th><td>Full-screen terminal, sidebar drawer, toolbar fixed bottom</td></tr>
+</table>
+
+<hr>
+
+<h2 id="backend-deps">Backend: Dependencias Go (go.mod)</h2>
+
+<pre><code>github.com/golang-jwt/jwt/v5
+github.com/mattn/go-sqlite3
+github.com/creack/pty
+golang.org/x/crypto
+golang.org/x/term
+github.com/gorilla/websocket
+github.com/go-chi/chi/v5
+github.com/yudai/gotty/webtty</code></pre>
+
+<hr>
+
+<h2 id="orden">Orden de Implementación</h2>
+
+<h3>Fase 0 — Setup</h3>
+<ol>
+  <li>Instalar Go 1.22+ (<code>scripts/install-go.sh</code>)</li>
+  <li><code>go mod init bridge-app</code></li>
+  <li><code>npm create vite@latest web/</code> (React + TypeScript)</li>
+  <li>Instalar deps frontend: tailwind, tanstack router/query, xterm + addons</li>
+  <li>Configurar Vite proxy → <code>localhost:8080</code> para <code>/api</code></li>
+</ol>
+
+<h3>Fase 1 — Backend Core</h3>
+<ol>
+  <li><code>internal/model/</code> — structs</li>
+  <li><code>internal/db/</code> — SQLite, users, migrations</li>
+  <li><code>internal/auth/</code> — JWT, bcrypt, middleware</li>
+  <li><code>internal/api/auth_handler.go</code> + <code>router.go</code></li>
+  <li><code>cmd/bridge-server/main.go</code> mínimo</li>
+  <li>Test con curl: register → login → me</li>
+</ol>
+
+<h3>Fase 2 — tmux Integration</h3>
+<ol>
+  <li><code>internal/tmux/parser.go</code> — parse <code>tmux list-*</code></li>
+  <li><code>internal/tmux/cli.go</code> — wrappers</li>
+  <li><code>internal/tmux/slave.go</code> — webtty.Slave</li>
+  <li><code>internal/api/session_handler.go</code> — REST sessions</li>
+  <li><code>internal/api/ws_handler.go</code> — WebSocket bridge</li>
+  <li>Test con <code>wscat</code> conectado a un pane</li>
+</ol>
+
+<h3>Fase 3 — Frontend Auth &amp; Shell</h3>
+<ol>
+  <li>AuthContext, LoginForm, ProtectedRoute</li>
+  <li>API client con JWT injection</li>
+  <li>AppShell layout, TopBar, Sidebar skeleton</li>
+  <li>TanStack Router config con rutas</li>
+  <li>Probar login → dashboard vacío</li>
+</ol>
+
+<h3>Fase 4 — Frontend Sesiones</h3>
+<ol>
+  <li><code>api/sessions.ts</code> — fetch wrapper</li>
+  <li>SessionList con TanStack Query</li>
+  <li>SessionCard, CreateSessionButton</li>
+  <li>WindowTabs, PaneGrid</li>
+  <li>Navegación: sidebar click → /sessions/$id</li>
+</ol>
+
+<h3>Fase 5 — Terminal</h3>
+<ol>
+  <li><code>useTmuxWebSocket</code> hook</li>
+  <li>TerminalView con xterm.js + addons</li>
+  <li>Conexión WS, resize handling</li>
+  <li>Múltiples panes visibles simultáneos</li>
+</ol>
+
+<h3>Fase 6 — Mobile</h3>
+<ol>
+  <li>MobileToolbar component</li>
+  <li><code>useMobileDetect</code> hook</li>
+  <li>Responsive layout (drawer, fullscreen terminal)</li>
+  <li>Touch optimizations (300ms delay, touch-action, viewport meta)</li>
+  <li>Toolbar sticky keys, long-press</li>
+</ol>
+
+<h3>Fase 7 — Pulido</h3>
+<ol>
+  <li>Error handling (tmux no disponible, sesión inexistente)</li>
+  <li>Reconnect automático del WebSocket</li>
+  <li>Tema oscuro forzado</li>
+  <li><code>seed-user.sh</code> script</li>
+</ol>
+
+<hr>
+
+<h2 id="verificacion">Verificación</h2>
+
+<ul>
+  <li><code>curl -X POST localhost:8080/api/auth/login -d '{"username":"admin","password":"..."}'</code> → JWT</li>
+  <li><code>curl -H "Authorization: Bearer $JWT" localhost:8080/api/sessions</code> → JSON con sesiones tmux</li>
+  <li><code>wscat -c "ws://localhost:8080/api/ws/pane/dev/@0/%0?token=$JWT"</code> → stream de terminal</li>
+  <li>Frontend: login → ver sesiones → click → ver terminal funcionando</li>
+  <li>Mobile: toolbar funcional, resize al rotar, scroll táctil fluido</li>
+</ul>
+
+</body>
+</html>

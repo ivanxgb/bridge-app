@@ -1,0 +1,19 @@
+[Unit]
+Description=bridge-app - tmux session bridge
+After=network.target
+
+[Service]
+Type=simple
+User=bridge
+WorkingDirectory=/opt/bridge-app
+Environment=BRIDGE_PORT=8080
+Environment=BRIDGE_DB=/var/lib/bridge-app/bridge.db
+EnvironmentFile=-/etc/bridge-app.env
+ExecStart=/opt/bridge-app/bin/bridge-server --port ${BRIDGE_PORT} --db ${BRIDGE_DB} --jwt-secret ${BRIDGE_JWT_SECRET} --static-dir /opt/bridge-app/web/dist
+Restart=on-failure
+RestartSec=5s
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

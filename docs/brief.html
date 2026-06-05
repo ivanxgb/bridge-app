@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bridge-app — Agent Brief</title>
+<style>
+  :root { --bg:#0d1117; --bg2:#161b22; --border:#30363d; --text:#c9d1d9; --text2:#8b949e; --accent:#58a6ff; --success:#3fb950; --warn:#d2991d; --danger:#f85149; --code:#1c2128; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; max-width:960px; margin:0 auto; padding:2rem 1.5rem; }
+  h1 { font-size:2rem; border-bottom:1px solid var(--border); padding-bottom:.5rem; margin-bottom:1.5rem; color:#f0f6fc; }
+  h2 { font-size:1.35rem; margin-top:2.5rem; margin-bottom:.75rem; color:#f0f6fc; border-bottom:1px solid var(--border); padding-bottom:.3rem; }
+  h3 { font-size:1.05rem; margin-top:1.25rem; margin-bottom:.5rem; color:#e6edf3; }
+  p { margin-bottom:.75rem; }
+  a { color:var(--accent); }
+  code { font-family:'JetBrains Mono','Fira Code',Consolas,monospace; font-size:.82em; background:var(--code); padding:.15em .35em; border-radius:3px; border:1px solid var(--border); }
+  pre { background:var(--code); border:1px solid var(--border); border-radius:6px; padding:1rem; overflow-x:auto; margin:.75rem 0; font-size:.85rem; }
+  pre code { border:none; padding:0; background:none; }
+  table { width:100%; border-collapse:collapse; margin:.75rem 0; font-size:.875rem; }
+  th,td { padding:.5rem .75rem; text-align:left; border:1px solid var(--border); }
+  th { background:var(--bg2); font-weight:600; color:#e6edf3; }
+  tr:nth-child(even) { background:rgba(255,255,255,.02); }
+  ul,ol { margin:.5rem 0 1rem 1.5rem; }
+  li { margin-bottom:.25rem; }
+  .done { color:var(--success); }
+  .pending { color:var(--text2); }
+  .badge { display:inline-block; padding:1px 8px; border-radius:10px; font-size:.75rem; font-weight:600; }
+  .badge-go { background:#00ADD8; color:#000; }
+  .badge-ts { background:#3178C6; color:#fff; }
+  hr { border:0; border-top:1px solid var(--border); margin:2rem 0; }
+</style>
+</head>
+<body>
+
+<h1>bridge-app — Agent Brief</h1>
+
+<h2>What is this?</h2>
+<p>A mobile-first webapp that replaces Termius. Connect to your tmux sessions from a browser with a touch-friendly UI. Currently running on a Linux VPS with tmux 3.3a managing multiple sessions.</p>
+<p><strong>Core loop:</strong> Login → sidebar shows tmux sessions → click one → see live terminals with xterm.js → mobile toolbar for missing keys (Ctrl, Alt, Esc, tmux prefix).</p>
+
+<h2>Current state (May 2026)</h2>
+
+<h3><span class="done">✅</span> Done — Backend (Fases 0-2)</h3>
+<ul>
+  <li><strong>Go server</strong> at <code>cmd/bridge-server/main.go</code>, compiles with <code>go build -o bin/bridge-server</code></li>
+  <li><strong>Start:</strong> <code>BRIDGE_JWT_SECRET=xxx ./bin/bridge-server --port 8080 --db bridge.db --jwt-secret xxx</code></li>
+  <li><strong>Auth:</strong> JWT + bcrypt. Endpoints: <code>POST /api/auth/register</code>, <code>POST /api/auth/login</code>, <code>GET /api/auth/me</code>, <code>POST /api/auth/refresh</code></li>
+  <li><strong>tmux:</strong> <code>GET /api/sessions</code> (list), <code>POST /api/sessions</code> (create), <code>DELETE /api/sessions/:id</code>, <code>POST /api/sessions/:id/rename</code>, <code>GET /api/sessions/:id/windows</code>, <code>GET /api/sessions/:id/windows/:win/panes</code></li>
+  <li><strong>WebSocket:</strong> <code>GET /api/ws/pane/:sessionId/:windowId/:paneId?token=jwt</code> — streams real terminal output via tmux control mode</li>
+  <li>All endpoints tested with curl and wscat — working against real tmux sessions</li>
+</ul>
+
+<h3><span class="pending">⏳</span> Code ready, not tested — Frontend auth (Fase 3)</h3>
+<ul>
+  <li><code>web/src/store/auth-context.tsx</code> — AuthProvider with JWT in sessionStorage</li>
+  <li><code>web/src/components/auth/LoginForm.tsx</code> — username + password form</li>
+  <li><code>web/src/api/client.ts</code> — fetch wrapper with Bearer token</li>
+  <li><code>web/src/router.tsx</code> — TanStack Router: <code>/login</code>, <code>/sessions</code></li>
+  <li>Routes created as shells, not wired to real data yet</li>
+</ul>
+
+<h3><span class="pending">❌</span> TODO — Fase 4: Dashboard UI</h3>
+<p><code>web/src/api/sessions.ts</code> already has typed fetch functions. Need: SessionList, SessionCard, CreateSessionButton, WindowTabs, PaneGrid.</p>
+
+<h3><span class="pending">❌</span> TODO — Fase 5: Terminal</h3>
+<p><code>web/src/hooks/useTmuxWebSocket.ts</code> already coded. Need: TerminalView component wrapping xterm.js.</p>
+
+<h3><span class="pending">❌</span> TODO — Fase 6: Mobile</h3>
+<p>MobileToolbar, responsive layout, sidebar drawer, touch optimizations.</p>
+
+<hr>
+
+<h2>What to build next — Fase 4 Dashboard</h2>
+<p><strong>Goal:</strong> A working session dashboard that shows real tmux sessions from the API.</p>
+<p><strong>Entry condition:</strong> Backend running on :8080 with seeded user (admin/test123). API endpoints returning real data.</p>
+<p><strong>Exit condition:</strong> User logs in, sees tmux sessions in sidebar, clicks one to navigate to session detail showing windows and panes. Can create, rename, and kill sessions from the UI.</p>
+
+<h3>Files to create/modify</h3>
+<table>
+  <tr><th>File</th><th>Action</th><th>Purpose</th></tr>
+  <tr><td><code>web/src/api/sessions.ts</code></td><td><span class="done">✅ exists</span></td><td>Typed — fetchSessions, createSession, killSession</td></tr>
+  <tr><td><code>web/src/components/session/SessionList.tsx</code></td><td>CREATE</td><td>useQuery → render with loading/empty/error/data</td></tr>
+  <tr><td><code>web/src/components/session/SessionCard.tsx</code></td><td>CREATE</td><td>Expandable card → navigate to /sessions/$id</td></tr>
+  <tr><td><code>web/src/components/session/CreateSessionButton.tsx</code></td><td>CREATE</td><td>Modal with name input → POST → invalidate query</td></tr>
+  <tr><td><code>web/src/components/session/WindowTabs.tsx</code></td><td>CREATE</td><td>Horizontal tabs for switching windows</td></tr>
+  <tr><td><code>web/src/components/session/PaneGrid.tsx</code></td><td>CREATE</td><td>Responsive grid of panes</td></tr>
+  <tr><td><code>web/src/routes/sessions.tsx</code></td><td>MODIFY</td><td>Wire SessionList, handle navigation</td></tr>
+  <tr><td><code>web/src/routes/sessions_.$sessionId.tsx</code></td><td>CREATE</td><td>Session detail: WindowTabs + PaneGrid</td></tr>
+</table>
+
+<h3>API reference</h3>
+<p>All endpoints require <code>Authorization: Bearer &lt;jwt&gt;</code> header.</p>
+<pre><code>// Session list
+GET /api/sessions
+→ [{ id: "$0", name: "vf-codex", windows: 1, created: "1779820289", attached: true }, ...]
+
+// Create session
+POST /api/sessions  body: { name: "my-session" }
+→ 201 Created
+
+// Kill session
+DELETE /api/sessions/$0
+→ 204 No Content
+
+// Rename session
+POST /api/sessions/$0/rename  body: { new_name: "new-name" }
+→ 204 No Content
+
+// Windows for a session
+GET /api/sessions/vf-codex/windows
+→ [{ id: "0", name: "bash", active: true }, ...]
+
+// Panes for a window
+GET /api/sessions/vf-codex/windows/0/panes
+→ [{ id: "0", title: "bash", active: true, pid: "12345" }]</code></pre>
+
+<p><strong>Important:</strong> Session IDs from tmux use <code>$</code> prefix (e.g., <code>$0</code>). Window IDs are plain integers (<code>0</code>, <code>1</code>). The ID used in API paths is the <em>name</em> field (e.g., "vf-codex"), not the <code>id</code> field (e.g., "$0").</p>
+
+<h3>Frontend stack</h3>
+<ul>
+  <li>React 19 + TypeScript + Tailwind CSS v4</li>
+  <li>TanStack Router (type-safe routing)</li>
+  <li>TanStack Query (data fetching + caching)</li>
+  <li>@xterm/xterm + addons — already installed</li>
+  <li>Vite dev server on :5173 with proxy to :8080 for /api</li>
+</ul>
+
+<h3>How to develop</h3>
+<pre><code>cd /opt/bridge-app
+# Terminal 1: backend
+export BRIDGE_JWT_SECRET="$(openssl rand -hex 32)"
+./bin/bridge-server --port 8080 --db bridge.db --jwt-secret "$BRIDGE_JWT_SECRET"
+# Terminal 2: seed user (once)
+go run ./scripts/seed/main.go --db bridge.db --user admin --pass test123
+# Terminal 3: frontend
+cd web && npm run dev</code></pre>
+
+<h3>Design system basics</h3>
+<p>Dark mode only. Colors defined in <code>web/src/globals.css</code>: <code>--bg-primary: #0d1117</code>, <code>--bg-secondary: #161b22</code>, <code>--border: #30363d</code>, <code>--text-primary: #c9d1d9</code>, <code>--accent: #58a6ff</code>, <code>--success: #3fb950</code>.</p>
+<p>Base components: <code>Button.tsx</code> (primary/danger/ghost), <code>Spinner.tsx</code>.</p>
+<p><strong>Every data component must handle: loading, empty, error, data states.</strong></p>
+
+<hr>
+
+<h2>Key URLs</h2>
+<ul>
+  <li><strong>Plan:</strong> <a href="https://ivanxgb.github.io/bridge-app/">ivanxgb.github.io/bridge-app/</a></li>
+  <li><strong>Roadmap:</strong> <a href="https://ivanxgb.github.io/bridge-app/roadmap.html">ivanxgb.github.io/bridge-app/roadmap.html</a></li>
+  <li><strong>Design vision:</strong> <code>docs/vision.md</code></li>
+  <li><strong>Repo:</strong> <a href="https://github.com/ivanxgb/bridge-app">github.com/ivanxgb/bridge-app</a></li>
+</ul>
+
+</body>
+</html>
