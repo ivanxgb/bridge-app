@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![Project Page](https://img.shields.io/badge/project-page-58a6ff.svg)](https://ivanxgb.github.io/bridge-app/)
 
+[![bridge-app project page preview](./docs/assets/bridge-app-hero.jpg)](https://ivanxgb.github.io/bridge-app/)
+
 Mobile-first web access for local `tmux` sessions.
 
 `bridge-app` is a self-hosted terminal bridge: a Go server talks to `tmux`,
