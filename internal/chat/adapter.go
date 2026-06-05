@@ -8,12 +8,12 @@ import (
 )
 
 type SessionConfig struct {
-	Kind              model.ChatKind
-	SessionName       string
-	CWD               string
+	Kind               model.ChatKind
+	SessionName        string
+	CWD                string
 	InitialInstruction string
-	Cols              int
-	Rows              int
+	Cols               int
+	Rows               int
 }
 
 type CliChatAdapter interface {

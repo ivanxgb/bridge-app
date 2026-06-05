@@ -62,7 +62,9 @@ func (h *SessionHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 func (h *SessionHandler) Rename(w http.ResponseWriter, r *http.Request) {
 	session := chi.URLParam(r, "sessionID")
-	var req struct{ NewName string `json:"new_name"` }
+	var req struct {
+		NewName string `json:"new_name"`
+	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid body")
 		return

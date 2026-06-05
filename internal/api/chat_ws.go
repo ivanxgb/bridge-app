@@ -82,10 +82,10 @@ func (h *ChatWSHandler) ServeChatWS(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	cfg := chat.SessionConfig{
-		Kind:   session.Kind,
-		CWD:    session.CWD,
-		Cols:   120,
-		Rows:   40,
+		Kind: session.Kind,
+		CWD:  session.CWD,
+		Cols: 120,
+		Rows: 40,
 	}
 	if session.TmuxName != "" {
 		cfg.SessionName = session.TmuxName

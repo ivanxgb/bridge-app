@@ -11,15 +11,15 @@ import (
 type parserState int
 
 const (
-	stateNormal   parserState = iota
+	stateNormal parserState = iota
 	stateThinking
 	stateTool
 )
 
 type OutputParser struct {
-	state      parserState
-	lineBuf    bytes.Buffer
-	eventBuf   []model.ChatEvent
+	state    parserState
+	lineBuf  bytes.Buffer
+	eventBuf []model.ChatEvent
 
 	// Current block IDs
 	msgID   int64
@@ -27,10 +27,10 @@ type OutputParser struct {
 	role    model.MessageRole
 
 	// Accumulators
-	msgContent    strings.Builder
-	blockContent  strings.Builder
-	blockTitle    string
-	toolName      string
+	msgContent   strings.Builder
+	blockContent strings.Builder
+	blockTitle   string
+	toolName     string
 
 	// ANSI strip state
 	inEscape bool

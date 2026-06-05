@@ -18,10 +18,10 @@ type ChatHandler struct {
 }
 
 type createChatRequest struct {
-	Kind              model.ChatKind `json:"kind"`
-	Title             string         `json:"title"`
-	CWD               string         `json:"cwd"`
-	InitialInstruction string        `json:"initialInstruction"`
+	Kind               model.ChatKind `json:"kind"`
+	Title              string         `json:"title"`
+	CWD                string         `json:"cwd"`
+	InitialInstruction string         `json:"initialInstruction"`
 }
 
 func (h *ChatHandler) List(w http.ResponseWriter, r *http.Request) {
